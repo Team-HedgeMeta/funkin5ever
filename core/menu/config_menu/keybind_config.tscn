@@ -88,6 +88,16 @@ layout_mode = 2
 display_name = "NOTE RIGHT"
 save_id = "note_right"
 
+[node name="volume_up" parent="items" unique_id=1728441923 instance=ExtResource("3_5c6oy")]
+layout_mode = 2
+display_name = "VOLUME UP"
+save_id = "volume_up"
+
+[node name="volume_down" parent="items" unique_id=241571948 instance=ExtResource("3_5c6oy")]
+layout_mode = 2
+display_name = "VOLUME DOWN"
+save_id = "volume_down"
+
 [node name="debug_kill" parent="items" unique_id=1890043262 instance=ExtResource("3_5c6oy")]
 layout_mode = 2
 display_name = "INSTAKILL"

@@ -4,7 +4,7 @@ extends Button
 
 func setup(_content:ContentMetadata) -> void:
 	self.content = _content
-	self.text = content.name
+	self.text = content.name if !content.name.is_empty() else content.id
 	self.button_pressed = content.enabled
 	$checkbox.toggle(content.enabled)
 

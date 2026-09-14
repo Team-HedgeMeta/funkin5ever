@@ -47,9 +47,6 @@ func _process(delta: float) -> void:
 		Song.return_scene = load(self.scene_file_path)
 		
 		Song.start_playlist([%songs.get_child(current_item).meta])
-	elif Input.is_action_just_pressed("ui_mod_manager") && controllable:
-		controllable = false
-		Transition.switch_scene(load("res://core/menu/contents_menu/contents_menu.tscn"))
 	
 	for item in %songs.get_children():
 		item.modulate.a = 1.0 if item.get_index() == current_item else 0.5

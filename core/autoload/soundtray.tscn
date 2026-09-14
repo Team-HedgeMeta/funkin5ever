@@ -1,4 +1,90 @@
 [gd_scene format=3 uid="uid://cddrk8u35crnh"]
 
-[node name="soundtray" type="CanvasLayer" unique_id=78358264]
+[ext_resource type="Script" uid="uid://bfh4vnx75kg8m" path="res://core/autoload/soundtray.gd" id="1_05mnd"]
+[ext_resource type="Texture2D" uid="uid://cx4eltvehipix" path="res://core/menu/soundtray/volumebox.png" id="2_rk7ao"]
+[ext_resource type="Texture2D" uid="uid://c3o4hyi17q6b3" path="res://core/menu/soundtray/bars_10.png" id="3_oeg7f"]
+
+[sub_resource type="Animation" id="Animation_oeg7f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(510, -150)]
+}
+
+[sub_resource type="Animation" id="Animation_bjexs"]
+resource_name = "in"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.35355335, 1),
+"update": 0,
+"values": [Vector2(510, -150), Vector2(510, 15.999998)]
+}
+
+[sub_resource type="Animation" id="Animation_4wwxn"]
+resource_name = "out"
+length = 1.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6666667, 1.3),
+"transitions": PackedFloat32Array(1, 2, 1),
+"update": 0,
+"values": [Vector2(510, 15.999998), Vector2(510, 15.999998), Vector2(510, -150)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4wwxn"]
+_data = {
+&"RESET": SubResource("Animation_oeg7f"),
+&"in": SubResource("Animation_bjexs"),
+&"out": SubResource("Animation_4wwxn")
+}
+
+[node name="soundtray" type="CanvasLayer" unique_id=78358264 node_paths=PackedStringArray("animation_player", "bars")]
 layer = 101
+script = ExtResource("1_05mnd")
+animation_player = NodePath("animation_player")
+bars = NodePath("box/bars")
+
+[node name="animation_player" type="AnimationPlayer" parent="." unique_id=335140844]
+root_node = NodePath("../box")
+libraries/ = SubResource("AnimationLibrary_4wwxn")
+
+[node name="box" type="TextureRect" parent="." unique_id=348197628]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -130.0
+offset_top = -150.0
+offset_right = 130.0
+offset_bottom = -4.0
+grow_horizontal = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset = Vector2(128.57141, 0)
+texture = ExtResource("2_rk7ao")
+
+[node name="bars" type="TextureRect" parent="box" unique_id=915742850]
+layout_mode = 0
+offset_left = 29.183716
+offset_top = 17.142853
+offset_right = 232.18372
+offset_bottom = 74.14286
+texture = ExtResource("3_oeg7f")

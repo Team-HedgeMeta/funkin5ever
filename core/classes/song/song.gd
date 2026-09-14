@@ -48,6 +48,7 @@ var hud:HUD
 var countdown:Countdown
 
 var song_started:bool = false
+var in_cutscene:bool = false
 var stats:GameStats
 
 var player_vocal:SongStreamPlayer
@@ -151,6 +152,7 @@ func _ready() -> void:
 	_before_ready_post.emit()
 	
 	if animation_player.has_animation("intro_cutscene"):
+		in_cutscene = true
 		animation_player.play("intro_cutscene")
 	else:
 		_start_countdown()
@@ -159,6 +161,8 @@ func _start_countdown() -> void:
 	for script in scripts:
 		script._ready_post()
 	hud._ready_post()
+	
+	in_cutscene = false
 	
 	# Discord thing
 	Discord.song()
@@ -209,9 +213,7 @@ func _opponent_note_hit(note:Note, is_sustain_part:bool) -> void:
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	if animation_player.is_playing():
-		if !song_started:
-			song_started = true
+	if !in_cutscene && animation_player.is_playing():
 		conductor.song_position = animation_player.current_animation_position
 	else:
 		conductor.song_position += delta
@@ -252,6 +254,7 @@ func _on_exit() -> void:
 	
 func _song_finished() -> void:
 	if animation_player.has_animation("end_cutscene"):
+		in_cutscene = true
 		animation_player.play("end_cutscene")
 	else:
 		_song_exit()

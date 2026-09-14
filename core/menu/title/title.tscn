@@ -2,7 +2,7 @@
 
 [ext_resource type="SpriteFrames" uid="uid://jalacvhlo7c3" path="res://core/menu/title/gf.xml" id="1_pdgbw"]
 [ext_resource type="Script" uid="uid://bd1jkjeyhgf1r" path="res://core/menu/title/title.gd" id="1_sox04"]
-[ext_resource type="Script" uid="uid://s08545ch4u74" path="res://core/classes/extensions/animated_sprite_ex.gd" id="2_3mrwi"]
+[ext_resource type="Script" uid="uid://s08545ch4u74" path="res://core/classes/extensions/animated_sprite_2d_ex.gd" id="2_3mrwi"]
 [ext_resource type="SpriteFrames" uid="uid://dwqlrc7ckqatm" path="res://core/menu/title/press_enter.res" id="4_pdgbw"]
 [ext_resource type="SpriteFrames" uid="uid://qlpbbihclrob" path="res://core/menu/title/logo.res" id="4_sox04"]
 [ext_resource type="FontFile" uid="uid://c7euvp5baixmv" path="res://core/fonts/alphabet.png" id="6_wms4c"]

@@ -15,6 +15,9 @@ class_name Keybinds
 @export var note_up:int = KEY_UP
 @export var note_right:int = KEY_RIGHT
 
+@export var volume_up:int = KEY_PLUS
+@export var volume_down:int = KEY_MINUS
+
 @export var debug_kill:int = KEY_R
 @export var debug_switch:int = KEY_F3
 

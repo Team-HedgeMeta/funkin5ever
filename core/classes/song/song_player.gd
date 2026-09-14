@@ -24,7 +24,7 @@ func _process(_delta: float) -> void:
 	if !is_instance_valid(animation_player): return
 	
 	if animation_player.is_playing() != prev_playing:
-		self.playing = animation_player.is_playing()
+		self.playing = (animation_player.is_playing() && animation_player.current_animation == "song")
 		prev_playing = self.playing
 	
 	if self.playing:

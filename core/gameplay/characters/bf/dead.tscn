@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dxmc5qdup0exi" path="res://core/classes/character_3d.gd" id="1_gbm0h"]
 [ext_resource type="SpriteFrames" uid="uid://brd5vfb5fms02" path="res://core/gameplay/characters/bf/BOYFRIEND.xml" id="2_gqe3u"]
-[ext_resource type="Script" uid="uid://s08545ch4u74" path="res://core/classes/extensions/animated_sprite_ex.gd" id="3_65auv"]
+[ext_resource type="Script" uid="uid://s08545ch4u74" path="res://core/classes/extensions/animated_sprite_2d_ex.gd" id="3_65auv"]
 
 [sub_resource type="Animation" id="Animation_k2w8d"]
 length = 0.001

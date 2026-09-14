@@ -17,6 +17,8 @@ enum ShaderOption
 @export var middle_scroll:bool = false
 @export var keybinds:Keybinds = Keybinds.new()
 
+@export var volume:int = 10
+
 @export var antialiasing:bool = true:
 	set(value):
 		antialiasing = value

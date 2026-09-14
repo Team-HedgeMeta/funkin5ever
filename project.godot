@@ -28,6 +28,7 @@ DebugDisplay="*uid://da3817d56yaqc"
 DiscordRPCLoader="*uid://bcnbtpro6lnnt"
 Discord="*uid://ip08qtqu07u6"
 CustomAutoload="*uid://unbqn0vhmayy"
+Soundtray="*uid://cddrk8u35crnh"
 
 [display]
 
@@ -78,6 +79,14 @@ debug_switch={
 "events": []
 }
 debug_kill={
+"deadzone": 0.2,
+"events": []
+}
+volume_up={
+"deadzone": 0.2,
+"events": []
+}
+volume_down={
 "deadzone": 0.2,
 "events": []
 }

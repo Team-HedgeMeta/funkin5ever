@@ -2,7 +2,7 @@
 
 [ext_resource type="SpriteFrames" uid="uid://b271lbvy0665t" path="res://core/menu/checkbox.xml" id="1_tp1kh"]
 [ext_resource type="Script" uid="uid://fa34lnskiyvh" path="res://core/menu/checkbox.gd" id="1_ydd6n"]
-[ext_resource type="Script" uid="uid://s08545ch4u74" path="res://core/classes/extensions/animated_sprite_ex.gd" id="2_6j4nn"]
+[ext_resource type="Script" uid="uid://s08545ch4u74" path="res://core/classes/extensions/animated_sprite_2d_ex.gd" id="2_6j4nn"]
 
 [sub_resource type="Animation" id="Animation_ydd6n"]
 length = 0.001
