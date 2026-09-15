@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://b1k0epmb1w5hq" path="res://core/gameplay/hud/health_bar.png" id="1_0xrmj"]
 [ext_resource type="Script" uid="uid://corspns8f4akq" path="res://core/gameplay/hud/default.gd" id="1_2kr0o"]
 [ext_resource type="FontFile" uid="uid://bqhu0u6tgswpv" path="res://core/fonts/vcr.ttf" id="2_3b4qi"]
-[ext_resource type="Texture2D" uid="uid://bgdkep8xnjsmj" path="res://core/gameplay/characters/bf/icon.png" id="3_a730s"]
 [ext_resource type="PackedScene" uid="uid://dnyyrjtlk1vfo" path="res://core/gameplay/notes/strumline.tscn" id="4_2kr0o"]
+[ext_resource type="Script" uid="uid://bxiytir6ori4c" path="res://core/classes/health_icon.gd" id="4_286du"]
 [ext_resource type="PackedScene" uid="uid://dmomf6vhues5x" path="res://core/gameplay/hud/objects/judgement_display.tscn" id="6_286du"]
 
 [node name="default_hud" type="Control" unique_id=27987618 node_paths=PackedStringArray("watermark", "health_bar", "opponent_icon", "player_icon", "song_text", "score_text", "judgement_display", "player_strumline", "opponent_strumline")]
@@ -64,16 +64,19 @@ texture_progress = ExtResource("1_0xrmj")
 tint_under = Color(1, 0, 0, 1)
 tint_progress = Color(0, 1, 0, 1)
 
-[node name="opponent_icon" type="Sprite2D" parent="health_bar" unique_id=1277568248]
+[node name="opponent_icon" type="Sprite2D" parent="health_bar" unique_id=486886510]
 position = Vector2(256, 8)
-texture = ExtResource("3_a730s")
 hframes = 2
+script = ExtResource("4_286du")
+metadata/_custom_type_script = "uid://bxiytir6ori4c"
 
-[node name="player_icon" type="Sprite2D" parent="health_bar" unique_id=1566947375]
+[node name="player_icon" type="Sprite2D" parent="health_bar" unique_id=1183246330]
 position = Vector2(344, 8)
-texture = ExtResource("3_a730s")
 flip_h = true
 hframes = 2
+script = ExtResource("4_286du")
+player = true
+metadata/_custom_type_script = "uid://bxiytir6ori4c"
 
 [node name="song_text" type="Label" parent="." unique_id=265901792]
 layout_mode = 1

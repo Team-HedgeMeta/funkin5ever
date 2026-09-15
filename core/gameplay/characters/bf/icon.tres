@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="HealthIconData" format=3 uid="uid://bir23062gk6bs"]
+
+[ext_resource type="Script" uid="uid://1du8yrc5egut" path="res://core/classes/resources/health_icon_meta.gd" id="1_mqkjd"]
+[ext_resource type="Texture2D" uid="uid://bgdkep8xnjsmj" path="res://core/gameplay/characters/bf/icon.png" id="2_ahi2i"]
+
+[resource]
+script = ExtResource("1_mqkjd")
+texture = ExtResource("2_ahi2i")
+color = Color(0.1882353, 0.6901961, 0.81960785, 1)
+metadata/_custom_type_script = "uid://1du8yrc5egut"

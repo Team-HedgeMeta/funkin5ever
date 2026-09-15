@@ -6,6 +6,8 @@ static var current_item:int = 0
 static var current_difficulty:int = 0
 var controllable:bool = true
 
+var bg_tween:Tween
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	for song in DEFAULT_SONG_LIST:
@@ -23,6 +25,10 @@ func change_item(change:int = 0) -> void:
 	%camera.global_position.y = %songs.get_child(current_item).global_position.y
 	GlobalSound.play_sfx(preload("res://core/menu/scroll.ogg"))
 	change_diff()
+	
+	if bg_tween != null: bg_tween.kill()
+	bg_tween = get_tree().create_tween()
+	bg_tween.tween_property(%bg, "modulate", (%songs.get_child(current_item).meta as SongMetadata).freeplay_icon.color, 0.3)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

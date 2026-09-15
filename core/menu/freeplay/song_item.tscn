@@ -2,7 +2,7 @@
 
 [ext_resource type="FontFile" uid="uid://c7euvp5baixmv" path="res://core/fonts/alphabet.png" id="1_4q35s"]
 [ext_resource type="Script" uid="uid://84d2031sqyto" path="res://core/menu/freeplay/song_item.gd" id="1_fq6vl"]
-[ext_resource type="Texture2D" uid="uid://bgdkep8xnjsmj" path="res://core/gameplay/characters/bf/icon.png" id="2_r3udc"]
+[ext_resource type="Script" uid="uid://bxiytir6ori4c" path="res://core/classes/health_icon.gd" id="4_n4te7"]
 
 [node name="song_item" type="HBoxContainer" unique_id=410455542]
 offset_right = 830.0
@@ -17,12 +17,14 @@ theme_override_fonts/font = ExtResource("1_4q35s")
 theme_override_font_sizes/font_size = 80
 text = "TRIPLE THREAT"
 
-[node name="icon" type="Control" parent="." unique_id=371390062]
-unique_name_in_owner = true
+[node name="icon_control" type="Control" parent="." unique_id=371390062]
 layout_mode = 2
 
-[node name="icon_sprite" type="Sprite2D" parent="icon" unique_id=1387215373]
+[node name="icon" type="Sprite2D" parent="icon_control" unique_id=1333999396]
+unique_name_in_owner = true
 position = Vector2(-10, -32)
-texture = ExtResource("2_r3udc")
 centered = false
 hframes = 2
+script = ExtResource("4_n4te7")
+do_bop = false
+metadata/_custom_type_script = "uid://bxiytir6ori4c"

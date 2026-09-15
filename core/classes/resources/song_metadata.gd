@@ -6,6 +6,7 @@ class_name SongMetadata
 @export var artist:String = ""
 @export var charter:String = ""
 @export var difficulties:Array[String] = ["normal"]
+@export var freeplay_icon:HealthIconData = HealthIconData.new()
 @export_category("Extra")
 @export var extra_data:Dictionary[String, Variant] = {}
 

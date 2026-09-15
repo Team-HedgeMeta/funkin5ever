@@ -6,7 +6,7 @@ class_name Character2D
 @export var animation_player:AnimationPlayer
 
 @export_category("Healthbar")
-@export var health_icon:Texture2D = preload("res://core/gameplay/characters/bf/icon.png")
+@export var health_icon:HealthIconData
 @export var health_icon_scale:float = 1
 
 @export_category("Death Screen")
