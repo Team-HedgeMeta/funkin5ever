@@ -98,6 +98,11 @@ layout_mode = 2
 display_name = "VOLUME DOWN"
 save_id = "volume_down"
 
+[node name="debug_chart_editor" parent="items" unique_id=338288117 instance=ExtResource("3_5c6oy")]
+layout_mode = 2
+display_name = "CHART EDITOR"
+save_id = "debug_chart_editor"
+
 [node name="debug_kill" parent="items" unique_id=1890043262 instance=ExtResource("3_5c6oy")]
 layout_mode = 2
 display_name = "INSTAKILL"

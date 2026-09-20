@@ -49,6 +49,9 @@ func get_step_crotchet(time:float = song_position) -> float:
 	return get_crotchet(time) / 4
 
 func get_time_from_step(target_step:float = 0.0) -> float:
+	if target_step < 0: return -1
+	if target_step == 0: return 0
+	
 	var current_calc_step:float = 0
 	var current_calc_time:float = 0
 	
@@ -70,7 +73,8 @@ func get_time_from_step(target_step:float = 0.0) -> float:
 
 func get_step_from_time(time:float = 0.0) -> float:
 	var calc_step:float = 0
-	if time <= 0: return -1
+	if time < 0: return -1
+	if time == 0: return 0
 	
 	for i in range(bpm_changes.size()):
 		var change = bpm_changes[i]

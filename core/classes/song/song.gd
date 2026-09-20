@@ -49,7 +49,9 @@ var countdown:Countdown
 
 var song_started:bool = false
 var in_cutscene:bool = false
+var in_chart_editor:bool = false
 var stats:GameStats
+
 
 var player_vocal:SongStreamPlayer
 
@@ -65,13 +67,11 @@ static func start_playlist(_playlist:Array[SongMetadata]) -> void:
 		print("[SONG] Playlist is empty, cannot start the game!")
 
 func _init() -> void:
-	if Engine.is_editor_hint():
-		return
+	if Engine.is_editor_hint(): return
 	current = self
 
 func _ready() -> void:
-	if Engine.is_editor_hint():
-		return
+	if Engine.is_editor_hint(): return
 	# fix when trying to run from editor directly
 	if playlist.size() < 1:
 		playlist.push_back(load(self.scene_file_path.replace("song.tscn", "meta.tres")))
@@ -89,6 +89,7 @@ func _ready() -> void:
 	stats = GameStats.new()
 	
 	animation_player.animation_finished.connect(func(n):
+		if in_chart_editor: return
 		match n:
 			"intro_cutscene":
 				_start_countdown()
@@ -114,24 +115,26 @@ func _ready() -> void:
 			instance._ready()
 	
 	hud_layer = CanvasLayer.new()
-	hud = hud_scene.instantiate() as HUD
-	hud_layer.add_child(hud)
 	add_child(hud_layer)
+	hud = hud_scene.instantiate() as HUD
 	
-	hud.player_strumline.scroll_speed = chart.scroll_speed
-	hud.player_strumline.note_hit.connect(_player_note_hit)
-	hud.player_strumline.note_miss.connect(_default_note_miss)
-	hud.player_strumline.note_miss.connect(_player_note_miss)
-	hud.opponent_strumline.scroll_speed = chart.scroll_speed
-	hud.opponent_strumline.note_hit.connect(_opponent_note_hit)
-	hud.opponent_strumline.note_miss.connect(_default_note_miss)
+	if is_instance_valid(hud):
+		hud_layer.add_child(hud)
 	
-	for note in chart.notes:
-		match note.player:
-			NoteData.PlayerType.PLAYER:
-				hud.player_strumline.note_queues.push_back(note)
-			NoteData.PlayerType.OPPONENT:
-				hud.opponent_strumline.note_queues.push_back(note)
+		hud.player_strumline.scroll_speed = chart.scroll_speed
+		hud.player_strumline.note_hit.connect(_player_note_hit)
+		hud.player_strumline.note_miss.connect(_default_note_miss)
+		hud.player_strumline.note_miss.connect(_player_note_miss)
+		hud.opponent_strumline.scroll_speed = chart.scroll_speed
+		hud.opponent_strumline.note_hit.connect(_opponent_note_hit)
+		hud.opponent_strumline.note_miss.connect(_default_note_miss)
+	
+		for note in chart.notes:
+			match note.player:
+				NoteData.PlayerType.PLAYER:
+					hud.player_strumline.note_queues.push_back(note)
+				NoteData.PlayerType.OPPONENT:
+					hud.opponent_strumline.note_queues.push_back(note)
 	
 	if is_instance_valid(animation_player.find_child("player", false)):
 		if animation_player.find_child("player", false) is SongStreamPlayer:
@@ -146,7 +149,8 @@ func _ready() -> void:
 	countdown.countdown_step.connect(func(step:int):
 		for script in scripts:
 			script._on_countdown_beat(step)
-		hud._on_countdown_beat(step)
+		if is_instance_valid(hud):
+			hud._on_countdown_beat(step)
 	)
 	
 	_before_ready_post.emit()
@@ -158,9 +162,11 @@ func _ready() -> void:
 		_start_countdown()
 	
 func _start_countdown() -> void:
+	if in_chart_editor: return
 	for script in scripts:
 		script._ready_post()
-	hud._ready_post()
+	if is_instance_valid(hud):
+		hud._ready_post()
 	
 	in_cutscene = false
 	
@@ -179,17 +185,19 @@ func _start_countdown() -> void:
 
 func _start_song() -> void:
 	animation_player.play("song")
-		
+
 	for script in scripts:
 		script._on_song_start()
-	hud._on_song_start()
+	if is_instance_valid(hud):
+		hud._on_song_start()
 	
 	song_started = true
 
 func _default_note_miss(note:Note, _type:Strumline.MissType) -> void:
 	for script in scripts:
 		script._on_note_miss(note, note.strumline)
-	hud._on_note_miss(note, note.strumline)
+	if is_instance_valid(hud):
+		hud._on_note_miss(note, note.strumline)
 
 func _player_note_hit(note:Note, is_sustain_part:bool) -> void:
 	if is_instance_valid(player_vocal): player_vocal.volume_linear = 1
@@ -197,7 +205,8 @@ func _player_note_hit(note:Note, is_sustain_part:bool) -> void:
 		var judge = stats.score_note(note)
 		for script in scripts:
 			script._on_note_hit(note, note.strumline, judge)
-		hud._on_note_hit(note, note.strumline, judge)
+		if is_instance_valid(hud):
+			hud._on_note_hit(note, note.strumline, judge)
 	
 func _player_note_miss(_note:Note, type:Strumline.MissType) -> void:
 	if is_instance_valid(player_vocal): player_vocal.volume_linear = 0
@@ -208,41 +217,49 @@ func _opponent_note_hit(note:Note, is_sustain_part:bool) -> void:
 	if !is_sustain_part:
 		for script in scripts:
 			script._on_note_hit(note, note.strumline)
-		hud._on_note_hit(note, note.strumline)
+		if is_instance_valid(hud):
+			hud._on_note_hit(note, note.strumline)
 	
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	if !in_cutscene && animation_player.is_playing():
-		conductor.song_position = animation_player.current_animation_position
-	else:
-		conductor.song_position += delta
-	
-	for script in scripts:
-		script._process(delta)
-	
-	if Input.is_action_just_pressed("ui_accept"):
-		var pause = pause_scene.instantiate()
-		add_child(pause)
-		get_tree().paused = true
+	if !in_chart_editor:
+		if !in_cutscene && animation_player.is_playing():
+			conductor.song_position = animation_player.current_animation_position
+		else:
+			conductor.song_position += delta
+		
+		for script in scripts:
+			script._process(delta)
+		
+		if Input.is_action_just_pressed("ui_accept"):
+			var pause = pause_scene.instantiate()
+			add_child(pause)
+			get_tree().paused = true
+		
+		if Input.is_action_just_pressed("debug_chart_editor"):
+			var editor:ChartEditor = load("res://core/tools/chart_editor/chart_editor.tscn").instantiate()
+			add_child(editor)
 
-	if Input.is_action_just_pressed("debug_kill"):
-		stats.health = 0
-	
-	if stats.health == 0:
-		hud_layer.visible = false
-		var death = death_scene.instantiate()
-		add_child(death)
-		get_tree().paused = true
+		if Input.is_action_just_pressed("debug_kill"):
+			stats.health = 0
+		
+		if stats.health == 0:
+			hud_layer.visible = false
+			var death = death_scene.instantiate()
+			add_child(death)
+			get_tree().paused = true
 
 var zoom_tween:Tween
 func _on_beat_hit(beat:int) -> void:
+	if in_chart_editor: return
 	if beat % camera_bop_interval == 0:
 		if is_instance_valid(zoom_tween):
 			zoom_tween.kill()
-		hud.scale += Vector2(0.02, 0.02)
-		zoom_tween = get_tree().create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
-		zoom_tween.tween_property(hud, "scale", Vector2.ONE, conductor.get_crotchet() * 4)
+		if is_instance_valid(hud):
+			hud.scale += Vector2(0.02, 0.02)
+			zoom_tween = get_tree().create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+			zoom_tween.tween_property(hud, "scale", Vector2.ONE, conductor.get_crotchet() * 4)
 
 func _on_exit() -> void:
 	for script in scripts:
@@ -262,7 +279,8 @@ func _song_finished() -> void:
 func _song_exit() -> void:
 	for script in scripts:
 		script._on_song_finish()
-	hud._on_song_finish()
+	if is_instance_valid(hud):
+		hud._on_song_finish()
 	
 	_on_exit()
 	match game_mode:

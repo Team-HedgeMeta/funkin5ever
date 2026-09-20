@@ -24,6 +24,7 @@ var down_scroll:bool = false
 
 var inputs:Array[String] = ["note_left", "note_down", "note_up", "note_right"]
 var note_queues:Array[NoteData] = []
+var note_queue_index:int = 0
 var scroll_speed:float = 1
 
 var note_pool = ScenePool.new(load("res://core/gameplay/notes/note.tscn"))
@@ -53,48 +54,56 @@ func reload_skin() -> void:
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	for queue in note_queues:
-		if queue.time - 3 <= Conductor.instance.song_position:
-			var note = note_pool.get_object()
-			note.strumline = self
-			note.data = queue
-			%notes.add_child(note)
-			note_queues.erase(queue)
-			note_spawned.emit(note)
-	
-	for note in %notes.get_children():
-		note.global_position.x = strums[note.data.column].global_position.x
-		var offset:float = (Conductor.instance.song_position - note.data.time) * (scroll_speed * 450)
-		if down_scroll:
-			offset *= -1
-		note.global_position.y = strums[note.data.column].global_position.y - offset
-		if botplay && note.data.time <= Conductor.instance.song_position && note.state == Note.NoteState.HITTABLE:
-			note_hit.emit(note, false)
+	if Song.current.in_chart_editor:
+		var filtered:Array[NoteData] = note_queues.filter(func(n:NoteData) -> bool: return absf(n.time - Conductor.instance.song_position) < 0.01)
+		if !filtered.is_empty():
+			for character in characters:
+				if character.has_animation(skin.sing_animations[filtered[0].column]):
+					character.play_anim(skin.sing_animations[filtered[0].column])
+	else:
+		if note_queues.size() > note_queue_index + 1:
+			var queue:NoteData = note_queues[note_queue_index]
+			if queue.time - 3 <= Conductor.instance.song_position:
+				var note = note_pool.get_object()
+				note.strumline = self
+				note.data = queue
+				%notes.add_child(note)
+				note_queue_index += 1
+				note_spawned.emit(note)
 		
-		if note.state == Note.NoteState.HOLDING:
-			if botplay or Input.is_action_pressed(inputs[note.data.column]):
-				note_hit.emit(note, true)
-			else:
-				note_miss.emit(note, MissType.HOLD_DROP)
-		
-		if note.state == Note.NoteState.MISSED:
-			note_miss.emit(note, MissType.NOTE_MISS)
-	
-	for i in strums.size():
-		var strum = strums[i]
-		
-		if !botplay:
-			if Input.is_action_just_pressed(inputs[i]):
-				var filtered = %notes.get_children().filter(func(n): return n.state == Note.NoteState.HITTABLE and n.data.column == i)
-				if filtered.size() > 0:
-					note_hit.emit(filtered[0], false)
-				else:
-					strum.play(skin.strum_press_animations[i])
+		for note in %notes.get_children():
+			note.global_position.x = strums[note.data.column].global_position.x
+			var offset:float = (Conductor.instance.song_position - note.data.time) * (scroll_speed * 450)
+			if down_scroll:
+				offset *= -1
+			note.global_position.y = strums[note.data.column].global_position.y - offset
+			if botplay && note.data.time <= Conductor.instance.song_position && note.state == Note.NoteState.HITTABLE:
+				note_hit.emit(note, false)
 			
-			if !botplay && !Input.is_action_pressed(inputs[i]):
+			if note.state == Note.NoteState.HOLDING:
+				if botplay or Input.is_action_pressed(inputs[note.data.column]):
+					note_hit.emit(note, true)
+				else:
+					note_miss.emit(note, MissType.HOLD_DROP)
+			
+			if note.state == Note.NoteState.MISSED:
+				note_miss.emit(note, MissType.NOTE_MISS)
+		
+		for i in strums.size():
+			var strum = strums[i]
+			
+			if !botplay:
+				if Input.is_action_just_pressed(inputs[i]):
+					var filtered = %notes.get_children().filter(func(n): return n.state == Note.NoteState.HITTABLE and n.data.column == i)
+					if filtered.size() > 0:
+						note_hit.emit(filtered[0], false)
+					else:
+						strum.play(skin.strum_press_animations[i])
+				
+				if !botplay && !Input.is_action_pressed(inputs[i]):
+					strum.play(skin.strum_static_animations[i])
+			elif !strum.is_playing():
 				strum.play(skin.strum_static_animations[i])
-		elif !strum.is_playing():
-			strum.play(skin.strum_static_animations[i])
 
 func _note_hit(note:Note, is_sustain_part:bool) -> void:
 	strums[note.data.column].play(skin.strum_confirm_animations[note.data.column])

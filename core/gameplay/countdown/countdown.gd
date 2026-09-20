@@ -7,6 +7,7 @@ class_name Countdown
 var skin:CountdownSkin
 
 var current_step:int = 0
+var countdown_timer:Timer
 
 signal countdown_step(step:int)
 signal countdown_finished
@@ -15,7 +16,7 @@ func _ready() -> void:
 	sprite.visible = false
 
 func start() -> void:
-	var countdown_timer:Timer = Timer.new()
+	countdown_timer = Timer.new()
 	add_child(countdown_timer)
 	
 	countdown_timer.timeout.connect(func():
@@ -55,3 +56,10 @@ func start() -> void:
 	)
 	
 	countdown_timer.start(Conductor.instance.get_crotchet())
+
+func cancel() -> void:
+	if current_step == 4: return
+	countdown_timer.cancel_free()
+	sound.stop()
+	sprite.visible = false
+	self.queue_free()

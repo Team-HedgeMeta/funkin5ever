@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+@onready var label:Label = %label
+
 var display_mode:int = 1
 
 var memory_peak:float = 0
@@ -18,10 +20,10 @@ func _process(delta: float) -> void:
 	if mem > memory_peak:
 		memory_peak = mem
 	
-	$label.text = "%sFPS • %sMB / %sMB" % [str(Engine.get_frames_per_second()), str(mem), str(memory_peak)]
+	label.text = "%sFPS • %sMB / %sMB" % [str(Engine.get_frames_per_second()), str(mem), str(memory_peak)]
 	
 	if display_mode == 2:
-		$label.text += "\nGodot Version: " + Engine.get_version_info().string
-		$label.text += "\nfunkin5ever Version: " + ProjectSettings.get("application/config/version")
+		label.text += "\nGodot Version: " + Engine.get_version_info().string
+		label.text += "\nfunkin5ever Version: " + ProjectSettings.get("application/config/version")
 		if Conductor.instance != null:
-			$label.text += "\n[Conductor Info]\nCurrent BPM: %s\nSong Position: %s\nCurrent Step: %s\nCurrent Beat: %s" % [Conductor.instance.get_bpm(), float(int(Conductor.instance.song_position * 100)) / 100, Conductor.instance.current_step, Conductor.instance.current_beat]
+			label.text += "\n[Conductor Info]\nCurrent BPM: %s\nSong Position: %s\nCurrent Step: %s\nCurrent Beat: %s" % [Conductor.instance.get_bpm(), float(int(Conductor.instance.song_position * 100)) / 100, Conductor.instance.current_step, Conductor.instance.current_beat]

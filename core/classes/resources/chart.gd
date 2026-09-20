@@ -15,3 +15,10 @@ var _difficulty:String = ""
 
 # for converter, marker would be {time: 0, focus_player: true}
 var _camera_movement_markers:Array[Dictionary] = []
+
+func sort() -> void:
+	notes.sort_custom(func(a: NoteData, b: NoteData) -> bool:
+		if a.time < b.time:
+			return true
+		return false
+	)

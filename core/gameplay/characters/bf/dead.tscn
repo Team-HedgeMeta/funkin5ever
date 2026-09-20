@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bsg5lyvewmgu6"]
 
-[ext_resource type="Script" uid="uid://dxmc5qdup0exi" path="res://core/classes/character_3d.gd" id="1_gbm0h"]
+[ext_resource type="Script" uid="uid://oknbil87oet5" path="res://core/classes/character_2d.gd" id="1_ecvis"]
 [ext_resource type="SpriteFrames" uid="uid://brd5vfb5fms02" path="res://core/gameplay/characters/bf/BOYFRIEND.xml" id="2_gqe3u"]
 [ext_resource type="Script" uid="uid://s08545ch4u74" path="res://core/classes/extensions/animated_sprite_2d_ex.gd" id="3_65auv"]
 
@@ -171,11 +171,13 @@ _data = {
 &"retry": SubResource("Animation_xa83x")
 }
 
-[node name="bf-dead" type="Node2D" unique_id=353933422 node_paths=PackedStringArray("animation_player")]
-script = ExtResource("1_gbm0h")
+[node name="bf-dead" type="Node2D" unique_id=1483272974 node_paths=PackedStringArray("animation_player")]
+script = ExtResource("1_ecvis")
 character_type = 2
 dance_animations = Array[String]([])
 animation_player = NodePath("animation_player")
+death_character = null
+metadata/_custom_type_script = "uid://oknbil87oet5"
 
 [node name="sprite" type="AnimatedSprite2D" parent="." unique_id=1292250224]
 position = Vector2(0, -160)

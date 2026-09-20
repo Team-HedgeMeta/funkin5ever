@@ -19,6 +19,8 @@ var data:NoteData:
 		reload_data()
 var skin:NoteSkin
 
+var editor:bool = false
+
 var state:NoteState = NoteState.NEUTRAL
 
 var sing_animations:Array[String] = []
@@ -35,7 +37,10 @@ func reload_data():
 	if FileAccess.file_exists(skin_path):
 		skin = load(skin_path)
 	else:
-		skin = strumline.skin
+		if is_instance_valid(strumline):
+			skin = strumline.skin
+		else:
+			skin = load("res://core/gameplay/notes/default/skin.tres")
 	
 	self.sprite_frames = skin.note_frames
 	self.play(skin.note_animations[data.column])
@@ -54,19 +59,21 @@ func reload_data():
 			%sustain.texture = skin.sustain_frame_right
 			%tail.texture = skin.sustain_frame_right_end
 	
-	if strumline.down_scroll:
+	if is_instance_valid(strumline) && strumline.down_scroll:
 		%clip_rect.rotation = deg_to_rad(180)
 	else:
 		%clip_rect.rotation = 0
-		#self.rotation
 
 func _process(delta: float) -> void:
 	if data.length > 0:
 		%sustain.visible = true
 		%tail.visible = true
-		%clip_rect.global_position.y = strumline.strums[data.column].global_position.y
-		%sustain.global_position.y = self.global_position.y
-		%sustain.scale.y = (data.length / Conductor.instance.get_step_crotchet(data.time)) * (strumline.scroll_speed*0.45)
+		if !editor && is_instance_valid(strumline):
+			%clip_rect.global_position.y = strumline.strums[data.column].global_position.y
+			%sustain.global_position.y = self.global_position.y
+			%sustain.scale.y = (data.length / Conductor.instance.get_step_crotchet(data.time)) * (strumline.scroll_speed*0.45)
+		else:
+			%sustain.scale.y = (data.length / Conductor.instance.get_step_crotchet(data.time))
 		%tail.position.y = %sustain.position.y + (87 * %sustain.scale.y)
 	else:
 		%sustain.visible = false

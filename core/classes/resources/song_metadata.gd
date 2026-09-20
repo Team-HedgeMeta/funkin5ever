@@ -31,12 +31,7 @@ func get_chart(difficulty:String = "normal") -> Chart:
 			result = format_instance.get_chart(charts_path, difficulty)
 	
 	if result == null: result = Chart.new()
-	
-	result.notes.sort_custom(func(a: NoteData, b: NoteData) -> bool:
-		if a.time < b.time:
-			return true
-		return false
-	)
+	result.sort()
 	result._song_id = self._song_id
 	result._difficulty = difficulty
 	

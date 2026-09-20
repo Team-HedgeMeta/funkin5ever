@@ -1,0 +1,239 @@
+[gd_scene format=3 uid="uid://bv7tu0tl4mpkv"]
+
+[ext_resource type="Script" uid="uid://bvummk0v2bhdo" path="res://core/tools/chart_editor/chart_editor.gd" id="1_v8k0a"]
+[ext_resource type="Theme" uid="uid://6shp5ck1tnja" path="res://core/tools/ui/kenney_ui.tres" id="3_drfku"]
+[ext_resource type="Script" uid="uid://4kgapqdgcvdq" path="res://core/tools/chart_editor/components/info_panel.gd" id="4_4r4a2"]
+[ext_resource type="Script" uid="uid://b5ihuoh8ox8xb" path="res://core/tools/chart_editor/grid.gd" id="5_f0vu5"]
+
+[node name="chart_editor" type="CanvasLayer" unique_id=145142204]
+process_mode = 3
+script = ExtResource("1_v8k0a")
+
+[node name="bg" type="ColorRect" parent="." unique_id=386449015]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.25)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="sub_viewport_container" type="SubViewportContainer" parent="." unique_id=1065267428]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="sub_viewport" type="SubViewport" parent="sub_viewport_container" unique_id=283161615]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="camera" type="Camera2D" parent="sub_viewport_container/sub_viewport" unique_id=1579823513]
+unique_name_in_owner = true
+position = Vector2(640, 360)
+limit_top = 180
+
+[node name="grid" type="Node2D" parent="sub_viewport_container/sub_viewport" unique_id=1884807307]
+unique_name_in_owner = true
+
+[node name="grid_parallax" type="Parallax2D" parent="sub_viewport_container/sub_viewport/grid" unique_id=1410120247]
+unique_name_in_owner = true
+repeat_size = Vector2(0, 1440)
+limit_begin = Vector2(0, 0)
+
+[node name="opponent_grid" type="Control" parent="sub_viewport_container/sub_viewport/grid/grid_parallax" unique_id=483809527]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.90000004)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 360.0
+offset_top = 360.0
+offset_right = 544.0
+offset_bottom = 1800.0
+pivot_offset = Vector2(180, 360)
+script = ExtResource("5_f0vu5")
+columns = 4
+rows = 32
+
+[node name="player_grid" type="Control" parent="sub_viewport_container/sub_viewport/grid/grid_parallax" unique_id=1797973195]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.90000004)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 546.0
+offset_top = 360.0
+offset_right = 730.0
+offset_bottom = 1800.0
+pivot_offset = Vector2(180, 360)
+script = ExtResource("5_f0vu5")
+columns = 4
+rows = 32
+
+[node name="extra_grid" type="Control" parent="sub_viewport_container/sub_viewport/grid/grid_parallax" unique_id=495802763]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.90000004)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 732.0
+offset_top = 360.0
+offset_right = 916.0
+offset_bottom = 1800.0
+pivot_offset = Vector2(180, 360)
+script = ExtResource("5_f0vu5")
+columns = 4
+rows = 32
+
+[node name="separator" type="ColorRect" parent="sub_viewport_container/sub_viewport/grid/grid_parallax" unique_id=653639000]
+offset_left = 544.0
+offset_top = 360.0
+offset_right = 548.0
+offset_bottom = 1800.0
+color = Color(0, 0, 0, 1)
+
+[node name="separator_2" type="ColorRect" parent="sub_viewport_container/sub_viewport/grid/grid_parallax" unique_id=77066379]
+offset_left = 728.0
+offset_top = 360.0
+offset_right = 732.0
+offset_bottom = 1800.0
+color = Color(0, 0, 0, 1)
+
+[node name="note_group" type="Node2D" parent="sub_viewport_container/sub_viewport/grid" unique_id=1022350750]
+unique_name_in_owner = true
+position = Vector2(360, 360)
+
+[node name="strumline" type="ColorRect" parent="sub_viewport_container/sub_viewport/grid" unique_id=28154187]
+unique_name_in_owner = true
+offset_left = 360.0
+offset_top = 360.0
+offset_right = 920.0
+offset_bottom = 364.0
+color = Color(1, 0, 0, 1)
+
+[node name="ui" type="Control" parent="." unique_id=2044491465]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_drfku")
+
+[node name="upper_panel" type="Panel" parent="ui" unique_id=460277210]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -640.0
+offset_right = 640.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="h_box_container" type="HBoxContainer" parent="ui/upper_panel" unique_id=1765630194]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="file" type="MenuButton" parent="ui/upper_panel/h_box_container" unique_id=1880106850]
+layout_mode = 2
+text = "File"
+item_count = 2
+popup/item_0/text = "Save Song (Ctrl + S)"
+popup/item_0/id = 0
+popup/item_1/text = "Exit"
+popup/item_1/id = 1
+
+[node name="edit" type="MenuButton" parent="ui/upper_panel/h_box_container" unique_id=800021403]
+layout_mode = 2
+text = "Edit"
+item_count = 9
+popup/item_0/text = "Undo"
+popup/item_0/id = 0
+popup/item_1/text = "Redo"
+popup/item_1/id = 1
+popup/item_2/id = 2
+popup/item_2/separator = true
+popup/item_3/text = "Cut"
+popup/item_3/id = 3
+popup/item_4/text = "Copy"
+popup/item_4/id = 4
+popup/item_5/text = "Paste"
+popup/item_5/id = 5
+popup/item_6/id = 6
+popup/item_6/separator = true
+popup/item_7/text = "Select All"
+popup/item_7/id = 7
+popup/item_8/text = "Deselect All"
+popup/item_8/id = 8
+
+[node name="view" type="MenuButton" parent="ui/upper_panel/h_box_container" unique_id=55778177]
+layout_mode = 2
+text = "View"
+item_count = 1
+popup/item_0/text = "AAAA"
+popup/item_0/id = 0
+
+[node name="snap" type="MenuButton" parent="ui/upper_panel/h_box_container" unique_id=452936940]
+layout_mode = 2
+text = "Snap"
+item_count = 1
+popup/item_0/text = "AAAA"
+popup/item_0/id = 0
+
+[node name="info_panel" type="Panel" parent="ui" unique_id=422109385 node_paths=PackedStringArray("editor")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -656.0
+offset_right = -32.0
+offset_bottom = -504.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("4_4r4a2")
+editor = NodePath("../..")
+
+[node name="title" type="VBoxContainer" parent="ui/info_panel" unique_id=1870368469]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 280.0
+offset_bottom = 136.0
+offset_transform_enabled = true
+
+[node name="label" type="Label" parent="ui/info_panel/title" unique_id=551578384]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "Conductor Info"
+
+[node name="h_separator" type="HSeparator" parent="ui/info_panel/title" unique_id=269021398]
+layout_mode = 2
+
+[node name="time_info" type="Label" parent="ui/info_panel/title" unique_id=707275646]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Time: 0
+(RAW: 0.00)"
+
+[node name="step_info" type="Label" parent="ui/info_panel/title" unique_id=1082446942]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Step: 0"
+
+[node name="beat_info" type="Label" parent="ui/info_panel/title" unique_id=354832394]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Beat: 0"
+
+[node name="measure_info" type="Label" parent="ui/info_panel/title" unique_id=778253540]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Measure: 0"
