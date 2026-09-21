@@ -152,14 +152,15 @@ func _process(delta: float) -> void:
 	# Character Animation Preview
 	var filtered_notes:Array[NoteData] = song.chart.notes.filter(func(n:NoteData) -> bool: return absf(n.time - Conductor.instance.song_position) < 0.01)
 	if !filtered_notes.is_empty():
-		if filtered_notes[0].player == NoteData.PlayerType.PLAYER:
-			for character in song.hud.player_strumline.characters:
-				if character.has_animation(song.hud.player_strumline.skin.sing_animations[filtered_notes[0].column]):
-					character.play_anim(song.hud.player_strumline.skin.sing_animations[filtered_notes[0].column])
-		else:
-			for character in song.hud.opponent_strumline.characters:
-				if character.has_animation(song.hud.opponent_strumline.skin.sing_animations[filtered_notes[0].column]):
-					character.play_anim(song.hud.opponent_strumline.skin.sing_animations[filtered_notes[0].column])
+		for note in filtered_notes:
+			if note.player == NoteData.PlayerType.PLAYER:
+				for character in song.hud.player_strumline.characters:
+					if character.has_animation(song.hud.player_strumline.skin.sing_animations[note.column]):
+						character.play_anim(song.hud.player_strumline.skin.sing_animations[note.column])
+			else:
+				for character in song.hud.opponent_strumline.characters:
+					if character.has_animation(song.hud.opponent_strumline.skin.sing_animations[note.column]):
+						character.play_anim(song.hud.opponent_strumline.skin.sing_animations[note.column])
 	
 	var snap:int = 1
 	%cursor.visible = (%extra_grid.position.x + (%extra_grid.columns * %extra_grid.grid_size.x) > ui.get_global_mouse_position().x) && (%opponent_grid.position.x < ui.get_global_mouse_position().x)

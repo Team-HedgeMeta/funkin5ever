@@ -223,6 +223,7 @@ func _player_note_miss(_note:Note, type:Strumline.MissType) -> void:
 		stats.miss_note()
 	
 func _opponent_note_hit(note:Note, is_sustain_part:bool) -> void:
+	if is_instance_valid(player_vocal): player_vocal.volume_linear = 1
 	if !is_sustain_part:
 		for script in scripts:
 			script._on_note_hit(note, note.strumline)
