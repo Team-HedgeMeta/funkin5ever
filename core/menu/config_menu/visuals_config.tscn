@@ -40,7 +40,7 @@ theme_override_constants/separation = 16
 layout_mode = 2
 display_name = "ANTIALIASING"
 save_id = "antialiasing"
-hint = "Whether to display your accuracy on screen."
+hint = "Whether to disable Anti-aliasing. Helps improve performance in FPS."
 
 [node name="shaders" parent="items" unique_id=1109699469 instance=ExtResource("3_huxba")]
 layout_mode = 2

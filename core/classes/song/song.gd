@@ -36,7 +36,7 @@ static var return_scene:PackedScene
 
 var conductor:Conductor
 
-var chart:Chart
+static var chart:Chart
 var meta:SongMetadata:
 	get():
 		return playlist[0]
@@ -62,6 +62,7 @@ static func start_playlist(_playlist:Array[SongMetadata]) -> void:
 	for song in _playlist:
 		playlist.push_back(song)
 	if playlist.size() > 0:
+		chart = playlist[0].get_chart(difficulty)
 		Transition.switch_scene(playlist[0].get_scene())
 	else:
 		print("[SONG] Playlist is empty, cannot start the game!")
@@ -83,7 +84,7 @@ func _ready() -> void:
 	add_child(conductor)
 	conductor.beat_hit.connect(_on_beat_hit)
 	
-	chart = meta.get_chart(difficulty)
+	if chart == null: chart = meta.get_chart(difficulty)
 	conductor.set_bpm_changes(chart.bpm_changes)
 	
 	stats = GameStats.new()
@@ -290,6 +291,7 @@ func _song_exit() -> void:
 			story_stats.score += stats.score
 			if playlist.size() > 1:
 				playlist.pop_front()
+				chart = playlist[0].get_chart(difficulty)
 				Transition.switch_scene(playlist[0].get_scene())
 			else:
 				var key:String = story_level + ":" + chart._difficulty

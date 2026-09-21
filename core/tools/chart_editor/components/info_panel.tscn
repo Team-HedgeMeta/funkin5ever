@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://d31dii0nu8h6e"]
+
+[ext_resource type="Script" uid="uid://4kgapqdgcvdq" path="res://core/tools/chart_editor/components/info_panel.gd" id="1_5emfl"]
+[ext_resource type="Theme" uid="uid://6shp5ck1tnja" path="res://core/tools/ui/kenney_ui.tres" id="1_tcojm"]
+
+[node name="info_panel" type="Panel" unique_id=481928429]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -656.0
+offset_right = -32.0
+offset_bottom = -504.0
+grow_horizontal = 0
+grow_vertical = 0
+theme = ExtResource("1_tcojm")
+script = ExtResource("1_5emfl")
+
+[node name="title" type="VBoxContainer" parent="." unique_id=759139999]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 280.0
+offset_bottom = 136.0
+offset_transform_enabled = true
+
+[node name="label" type="Label" parent="title" unique_id=1968166958]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "Conductor Info"
+
+[node name="h_separator" type="HSeparator" parent="title" unique_id=1476591841]
+layout_mode = 2
+
+[node name="time_info" type="Label" parent="title" unique_id=1089920957]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Time: 0
+(RAW: 0.00)"
+
+[node name="step_info" type="Label" parent="title" unique_id=1513061033]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Step: 0"
+
+[node name="beat_info" type="Label" parent="title" unique_id=303455918]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Beat: 0"
+
+[node name="measure_info" type="Label" parent="title" unique_id=218120714]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Measure: 0"

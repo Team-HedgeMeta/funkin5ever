@@ -28,6 +28,7 @@ var sing_animations:Array[String] = []
 @onready var clip_rect:ColorRect = %clip_rect
 @onready var sustain:TextureRect = %sustain
 @onready var tail:Sprite2D = %tail
+@onready var editor_hitbox:Control = %editor_hitbox
 
 func reload_data():
 	self.self_modulate = Color.WHITE

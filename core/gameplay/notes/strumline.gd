@@ -9,6 +9,8 @@ enum MissType
 	HOLD_DROP
 }
 
+static var instances:Array[Strumline] = []
+
 @export var skin:NoteSkin = preload("res://core/gameplay/notes/default/skin.tres"):
 	set(value):
 		skin = value
@@ -19,6 +21,7 @@ enum MissType
 @export var characters:Array[Node] = []
 
 @onready var strums:Array[Node2D] = [%left, %down, %up, %right]
+@onready var note_group:Node2D = %notes
 
 var down_scroll:bool = false
 
@@ -40,6 +43,8 @@ func _ready() -> void:
 	
 	note_hit.connect(_note_hit)
 	note_miss.connect(_note_miss)
+	
+	instances.push_back(self)
 
 func reload_skin() -> void:
 	%notes.scale = Vector2(skin.scale, skin.scale)
@@ -61,15 +66,18 @@ func _process(delta: float) -> void:
 				if character.has_animation(skin.sing_animations[filtered[0].column]):
 					character.play_anim(skin.sing_animations[filtered[0].column])
 	else:
-		if note_queues.size() > note_queue_index + 1:
+		if note_queues.size() > note_queue_index:
 			var queue:NoteData = note_queues[note_queue_index]
 			if queue.time - 3 <= Conductor.instance.song_position:
-				var note = note_pool.get_object()
-				note.strumline = self
-				note.data = queue
-				%notes.add_child(note)
-				note_queue_index += 1
-				note_spawned.emit(note)
+				if Conductor.instance.song_position >= queue.time + queue.length - 0.1: # it gone too far
+					note_queue_index += 1
+				else:
+					var note = note_pool.get_object()
+					note.strumline = self
+					note.data = queue
+					%notes.add_child(note)
+					note_queue_index += 1
+					note_spawned.emit(note)
 		
 		for note in %notes.get_children():
 			note.global_position.x = strums[note.data.column].global_position.x
@@ -139,3 +147,6 @@ func _note_miss(note:Note, type:MissType) -> void:
 		if character.has_animation(note.sing_animations[note.data.column] + "_miss"):
 			character.play_anim(note.sing_animations[note.data.column] + "_miss", true)
 	note_pool.add_to_pool(note)
+
+func _exit_tree() -> void:
+	instances.erase(self)
