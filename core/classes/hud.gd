@@ -9,6 +9,7 @@ func _init() -> void:
 	Conductor.instance.beat_hit.connect(_on_beat_hit)
 
 func _ready() -> void: pass
+func _on_load_notes() -> void: pass
 func _ready_post() -> void: pass
 
 @warning_ignore("unused_parameter")

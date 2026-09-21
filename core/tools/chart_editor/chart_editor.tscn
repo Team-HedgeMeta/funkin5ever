@@ -121,6 +121,14 @@ color = Color(0, 0, 0, 1)
 unique_name_in_owner = true
 position = Vector2(360, 360)
 
+[node name="cursor" type="ColorRect" parent="sub_viewport_container/sub_viewport/grid" unique_id=1531694319]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.44313726)
+offset_left = 360.0
+offset_top = 360.0
+offset_right = 405.6
+offset_bottom = 405.0
+
 [node name="strumline" type="ColorRect" parent="sub_viewport_container/sub_viewport/grid" unique_id=28154187]
 unique_name_in_owner = true
 offset_left = 360.0
@@ -130,6 +138,7 @@ offset_bottom = 364.0
 color = Color(1, 0, 0, 1)
 
 [node name="ui" type="Control" parent="." unique_id=2044491465]
+unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

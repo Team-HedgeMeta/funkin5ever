@@ -59,17 +59,11 @@ func reload_skin() -> void:
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	if Song.current.in_chart_editor:
-		var filtered:Array[NoteData] = note_queues.filter(func(n:NoteData) -> bool: return absf(n.time - Conductor.instance.song_position) < 0.01)
-		if !filtered.is_empty():
-			for character in characters:
-				if character.has_animation(skin.sing_animations[filtered[0].column]):
-					character.play_anim(skin.sing_animations[filtered[0].column])
-	else:
+	if !Song.current.in_chart_editor:
 		if note_queues.size() > note_queue_index:
 			var queue:NoteData = note_queues[note_queue_index]
 			if queue.time - 3 <= Conductor.instance.song_position:
-				if Conductor.instance.song_position >= queue.time + queue.length - 0.1: # it gone too far
+				if Conductor.instance.song_position > queue.time + queue.length + 0.1: # it gone too far
 					note_queue_index += 1
 				else:
 					var note = note_pool.get_object()
@@ -150,3 +144,10 @@ func _note_miss(note:Note, type:MissType) -> void:
 
 func _exit_tree() -> void:
 	instances.erase(self)
+
+func sort_queue() -> void:
+	note_queues.sort_custom(func(a: NoteData, b: NoteData) -> bool:
+		if a.time < b.time:
+			return true
+		return false
+	)

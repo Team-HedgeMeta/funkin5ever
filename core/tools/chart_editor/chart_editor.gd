@@ -20,6 +20,7 @@ var conductor:Conductor:
 
 @onready var camera:Camera2D = %camera
 @onready var note_group:Node2D = %note_group
+@onready var ui:Control = %ui
 
 @onready var grid_initial_y:float = %player_grid.global_position.y
 
@@ -41,6 +42,7 @@ func _ready() -> void:
 	song.in_chart_editor = true
 	song.hud_layer.visible = false
 	for strum in Strumline.instances:
+			strum.note_queues.clear()
 			for note in strum.note_group.get_children(): note.free()
 			strum.note_queue_index = 0
 	
@@ -51,11 +53,6 @@ func _ready() -> void:
 		song.animation_player.seek(0)
 		conductor.song_position = 0
 	song.animation_player.pause()
-	
-	
-	for note in note_group.get_children(): note.queue_free()
-	for strum in Strumline.instances:
-		strum.note_queues.clear()
 	
 	song.chart.sort()
 	for note_data in song.chart.notes:
@@ -77,7 +74,7 @@ func _process(delta: float) -> void:
 	elif Input.is_action_just_pressed("ui_copy"):
 		if !selected_notes.is_empty():
 			var copy_data:Array[NoteData] = []
-			for note:Note in selected_notes: copy_data.push_back(note.data.duplicate(true))
+			for note:Note in selected_notes: copy_data.push_back(note.data)
 			copy_data.sort_custom(_sort_note_data)
 			
 			clipboard = ChartEditorClipboard.new(copy_data[0].time)
@@ -105,23 +102,26 @@ func _process(delta: float) -> void:
 			
 			undo_redo.commit_action()
 	elif Input.is_action_just_pressed("ui_paste"):
-		undo_redo.create_action("Paste Note(s)")
-		
-		var time = clipboard.time
-		var notes = clipboard.notes
-		
-		var pasted_notes:Array[Note] = []
-		undo_redo.add_do_method(func():
-			for note in notes:
-				note.time = note.time - time + conductor.song_position
-				pasted_notes.push_back(add_note(note))
-		)
-		undo_redo.add_undo_method(func():
-			for note in pasted_notes:
-				erase_note(note)
-		)
+		if clipboard != null:
+			undo_redo.create_action("Paste Note(s)")
 			
-		undo_redo.commit_action()
+			var time = clipboard.time
+			var notes = clipboard.notes
+			
+			var pasted_notes:Array[Note] = []
+			undo_redo.add_do_method(func():
+				for note in notes:
+					var new_data:NoteData = note.duplicate(true)
+					new_data.time = note.time - time + conductor.song_position
+					new_data.player = get_mouse_overlap_player()
+					pasted_notes.push_back(add_note(new_data))
+			)
+			undo_redo.add_undo_method(func():
+				for note in pasted_notes:
+					erase_note(note)
+			)
+				
+			undo_redo.commit_action()
 	elif Input.is_action_just_pressed("ui_accept"):
 		Discord.song()
 		if !song.animation_player.is_playing():
@@ -131,6 +131,7 @@ func _process(delta: float) -> void:
 		song.hud_layer.visible = true
 		song.in_chart_editor = false
 		DebugDisplay.label.visible = true
+		song.load_notes()
 		self.queue_free()
 	
 	for note:Note in note_group.get_children():
@@ -147,7 +148,23 @@ func _process(delta: float) -> void:
 		%grid_parallax.repeat_times = 1
 	
 	camera.global_position.y = %strumline.global_position.y
+
+	# Character Animation Preview
+	var filtered_notes:Array[NoteData] = song.chart.notes.filter(func(n:NoteData) -> bool: return absf(n.time - Conductor.instance.song_position) < 0.01)
+	if !filtered_notes.is_empty():
+		if filtered_notes[0].player == NoteData.PlayerType.PLAYER:
+			for character in song.hud.player_strumline.characters:
+				if character.has_animation(song.hud.player_strumline.skin.sing_animations[filtered_notes[0].column]):
+					character.play_anim(song.hud.player_strumline.skin.sing_animations[filtered_notes[0].column])
+		else:
+			for character in song.hud.opponent_strumline.characters:
+				if character.has_animation(song.hud.opponent_strumline.skin.sing_animations[filtered_notes[0].column]):
+					character.play_anim(song.hud.opponent_strumline.skin.sing_animations[filtered_notes[0].column])
 	
+	var snap:int = 1
+	%cursor.visible = (%extra_grid.position.x + (%extra_grid.columns * %extra_grid.grid_size.x) > ui.get_global_mouse_position().x) && (%opponent_grid.position.x < ui.get_global_mouse_position().x)
+	%cursor.position.y = max(0, floor(%cursor.get_global_mouse_position().y / (%opponent_grid.grid_size.y / snap)) * (%opponent_grid.grid_size.y / snap))
+	%cursor.position.x = get_grid(get_mouse_overlap_player()).position.x + get_mouse_lane() * get_grid(get_mouse_overlap_player()).grid_size.x
 func resume() -> void:
 	seek_animation()
 	song.animation_player.play()
@@ -174,6 +191,12 @@ func _input(event: InputEvent) -> void:
 				if !filtered.is_empty():
 					for note:Note in filtered:
 						selected_notes.push_back(note)
+				else:
+					var new_data:NoteData = NoteData.new()
+					new_data.column = get_mouse_lane()
+					new_data.time = conductor.get_time_from_step((%cursor.position.y - grid_initial_y) / %player_grid.grid_size.y)
+					new_data.player = get_mouse_overlap_player()
+					add_note(new_data)
 			if event.button_index == MOUSE_BUTTON_RIGHT:
 				selected_notes.clear()
 				
@@ -207,25 +230,15 @@ func add_note(data:NoteData) -> Note:
 	
 	note_group.add_child(note)
 	
-	var target_grid:Control = %extra_grid
-	match data.player:
-		NoteData.PlayerType.OPPONENT:
-			target_grid = %opponent_grid
-			song.hud.opponent_strumline.note_queues.push_back(data)
-		NoteData.PlayerType.PLAYER:
-			target_grid = %player_grid
-			song.hud.player_strumline.note_queues.push_back(data)
+	var target_grid:Control = get_grid(data.player)
 		
 	note.global_position.x = target_grid.global_position.x + floor(target_grid.grid_size.x * data.column) + (target_grid.grid_size.x / 2)
-	note.global_position.y = target_grid.position.y + (conductor.get_step_from_time(data.time) * target_grid.grid_size.y) + (target_grid.grid_size.y / 2)
+	note.global_position.y = grid_initial_y + (conductor.get_step_from_time(data.time) * target_grid.grid_size.y) + (target_grid.grid_size.y / 2)
 	if !song.chart.notes.has(data):
 		song.chart.notes.push_back(data)
 	return note
 	
 func erase_note(note:Note) -> void:
-	for strum in Strumline.instances:
-		if strum.note_queues.has(note.data):
-			strum.note_queues.erase(note.data)
 	song.chart.notes.erase(note.data)
 	note.queue_free()
 
@@ -238,3 +251,22 @@ func _sort_note_data(a: NoteData, b: NoteData) -> bool:
 	if a.time < b.time:
 		return true
 	return false
+
+func get_mouse_overlap_player() -> NoteData.PlayerType:
+	if %opponent_grid.global_position.x < ui.get_global_mouse_position().x && ui.get_global_mouse_position().x < %opponent_grid.position.x + %opponent_grid.grid_size.x * %opponent_grid.columns:
+		return NoteData.PlayerType.OPPONENT
+	elif  %player_grid.global_position.x < ui.get_global_mouse_position().x && ui.get_global_mouse_position().x < %player_grid.position.x + %player_grid.grid_size.x * %player_grid.columns:
+		return NoteData.PlayerType.PLAYER
+	return NoteData.PlayerType.EXTRA
+
+func get_grid(player:NoteData.PlayerType) -> ChartEditorGrid:
+	match player:
+		NoteData.PlayerType.OPPONENT:
+			return %opponent_grid
+		NoteData.PlayerType.PLAYER:
+			return %player_grid
+		_:
+			return %extra_grid
+
+func get_mouse_lane() -> int:
+	return absi(floor((ui.get_global_mouse_position().x - %opponent_grid.global_position.x) / %opponent_grid.grid_size.x)) % 4

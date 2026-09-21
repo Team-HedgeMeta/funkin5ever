@@ -129,13 +129,8 @@ func _ready() -> void:
 		hud.opponent_strumline.scroll_speed = chart.scroll_speed
 		hud.opponent_strumline.note_hit.connect(_opponent_note_hit)
 		hud.opponent_strumline.note_miss.connect(_default_note_miss)
-	
-		for note in chart.notes:
-			match note.player:
-				NoteData.PlayerType.PLAYER:
-					hud.player_strumline.note_queues.push_back(note)
-				NoteData.PlayerType.OPPONENT:
-					hud.opponent_strumline.note_queues.push_back(note)
+		
+		load_notes()
 	
 	if is_instance_valid(animation_player.find_child("player", false)):
 		if animation_player.find_child("player", false) is SongStreamPlayer:
@@ -162,6 +157,19 @@ func _ready() -> void:
 	else:
 		_start_countdown()
 	
+func load_notes() -> void:
+	for note in chart.notes:
+		match note.player:
+			NoteData.PlayerType.PLAYER:
+				hud.player_strumline.note_queues.push_back(note)
+			NoteData.PlayerType.OPPONENT:
+				hud.opponent_strumline.note_queues.push_back(note)
+	for strum in Strumline.instances: strum.sort_queue()
+	
+	for script in scripts:
+		script._on_load_notes()
+	hud._on_load_notes()
+
 func _start_countdown() -> void:
 	if in_chart_editor: return
 	for script in scripts:

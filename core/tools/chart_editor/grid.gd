@@ -1,5 +1,6 @@
 @tool
 extends Control
+class_name ChartEditorGrid
 
 
 @export var primary_color: Color = Color.WHITE
