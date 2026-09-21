@@ -192,11 +192,20 @@ func _input(event: InputEvent) -> void:
 					for note:Note in filtered:
 						selected_notes.push_back(note)
 				else:
-					var new_data:NoteData = NoteData.new()
-					new_data.column = get_mouse_lane()
-					new_data.time = conductor.get_time_from_step((%cursor.position.y - grid_initial_y) / %player_grid.grid_size.y)
-					new_data.player = get_mouse_overlap_player()
-					add_note(new_data)
+					undo_redo.create_action("Place Note")
+					
+					var something:Array[Note] = [] # somehow we can't keep node
+					undo_redo.add_do_method(func():
+						var new_data:NoteData = NoteData.new()
+						new_data.column = get_mouse_lane()
+						new_data.time = conductor.get_time_from_step((%cursor.position.y - grid_initial_y) / %player_grid.grid_size.y)
+						new_data.player = get_mouse_overlap_player()
+						something.push_back(add_note(new_data))
+					)
+					undo_redo.add_undo_method(func():
+						erase_note(something[0])
+					)
+					undo_redo.commit_action()
 			if event.button_index == MOUSE_BUTTON_RIGHT:
 				selected_notes.clear()
 				
