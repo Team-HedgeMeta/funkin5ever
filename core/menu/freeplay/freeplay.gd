@@ -16,9 +16,8 @@ func _ready() -> void:
 	for content in ContentManager.enabled_contents:
 		for song in content.freeplay_song_list:
 			create_song(song)
-	await get_tree().create_timer(0.02).timeout # avoid the camera bug, kill me
-	change_item(0)
-	change_diff(0)
+	change_item.call_deferred(0)
+	change_diff.call_deferred(0)
 
 func change_item(change:int = 0) -> void:
 	current_item = wrap(current_item + change, 0, %songs.get_child_count())

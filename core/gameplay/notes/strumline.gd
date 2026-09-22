@@ -61,17 +61,17 @@ func _process(delta: float) -> void:
 		return
 	if !Song.current.in_chart_editor:
 		if note_queues.size() > note_queue_index:
+			while note_queues[note_queue_index].time - 0.3 <= Conductor.instance.song_position:
+				note_queue_index += 1
+			
 			var queue:NoteData = note_queues[note_queue_index]
 			if queue.time - 3 <= Conductor.instance.song_position:
-				if Conductor.instance.song_position > queue.time + queue.length + 0.1: # it gone too far
-					note_queue_index += 1
-				else:
-					var note = note_pool.get_object()
-					note.strumline = self
-					note.data = queue
-					%notes.add_child(note)
-					note_queue_index += 1
-					note_spawned.emit(note)
+				var note = note_pool.get_object()
+				note.strumline = self
+				note.data = queue
+				%notes.add_child(note)
+				note_queue_index += 1
+				note_spawned.emit(note)
 		
 		for note in %notes.get_children():
 			note.global_position.x = strums[note.data.column].global_position.x

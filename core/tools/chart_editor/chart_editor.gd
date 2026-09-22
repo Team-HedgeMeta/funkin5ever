@@ -108,13 +108,17 @@ func _process(delta: float) -> void:
 			var time = clipboard.time
 			var notes = clipboard.notes
 			
+			selected_notes.clear()
+			
 			var pasted_notes:Array[Note] = []
 			undo_redo.add_do_method(func():
 				for note in notes:
 					var new_data:NoteData = note.duplicate(true)
-					new_data.time = note.time - time + conductor.song_position
+					new_data.time = note.time - time + conductor.get_time_from_step((%cursor.position.y - grid_initial_y) / %player_grid.grid_size.y)
 					new_data.player = get_mouse_overlap_player()
-					pasted_notes.push_back(add_note(new_data))
+					var n:Note = add_note(new_data)
+					pasted_notes.push_back(n)
+					selected_notes.push_back(n)
 			)
 			undo_redo.add_undo_method(func():
 				for note in pasted_notes:
@@ -186,27 +190,30 @@ func _input(event: InputEvent) -> void:
 				conductor.song_position += 1
 				seek_animation()
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				if !Input.is_action_pressed("editor_shift"):
-					selected_notes.clear()
-				var filtered:Array = note_group.get_children().filter(func(n:Note): return n.editor_hitbox.get_rect().has_point(n.get_local_mouse_position()))
-				if !filtered.is_empty():
-					for note:Note in filtered:
-						selected_notes.push_back(note)
-				else:
-					undo_redo.create_action("Place Note")
-					
-					var something:Array[Note] = [] # somehow we can't keep node
-					undo_redo.add_do_method(func():
-						var new_data:NoteData = NoteData.new()
-						new_data.column = get_mouse_lane()
-						new_data.time = conductor.get_time_from_step((%cursor.position.y - grid_initial_y) / %player_grid.grid_size.y)
-						new_data.player = get_mouse_overlap_player()
-						something.push_back(add_note(new_data))
-					)
-					undo_redo.add_undo_method(func():
-						erase_note(something[0])
-					)
-					undo_redo.commit_action()
+				if %cursor.visible:
+					if !Input.is_action_pressed("editor_shift"):
+						selected_notes.clear()
+					var filtered:Array = note_group.get_children().filter(func(n:Note): return n.editor_hitbox.get_rect().has_point(n.get_local_mouse_position()))
+					if !filtered.is_empty():
+						for note:Note in filtered:
+							selected_notes.push_back(note)
+					else:
+						selected_notes.clear()
+						undo_redo.create_action("Place Note")
+						
+						var something:Array[Note] = [] # somehow we can't keep node
+						undo_redo.add_do_method(func():
+							var new_data:NoteData = NoteData.new()
+							new_data.column = get_mouse_lane()
+							new_data.time = conductor.get_time_from_step((%cursor.position.y - grid_initial_y) / %player_grid.grid_size.y)
+							new_data.player = get_mouse_overlap_player()
+							something.push_back(add_note(new_data))
+							selected_notes.push_back(something[0])
+						)
+						undo_redo.add_undo_method(func():
+							erase_note(something[0])
+						)
+						undo_redo.commit_action()
 			if event.button_index == MOUSE_BUTTON_RIGHT:
 				selected_notes.clear()
 				
@@ -250,6 +257,7 @@ func add_note(data:NoteData) -> Note:
 	
 func erase_note(note:Note) -> void:
 	song.chart.notes.erase(note.data)
+	if selected_notes.has(note): selected_notes.erase(note)
 	note.queue_free()
 
 func _sort_note(a: Note, b: Note) -> bool:

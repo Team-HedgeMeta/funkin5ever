@@ -21,6 +21,7 @@ texture = ExtResource("1_yhfgr")
 
 [node name="container" type="VBoxContainer" parent="." unique_id=1148261677]
 unique_name_in_owner = true
+process_priority = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -69,6 +70,7 @@ animation = &"options idle"
 [node name="camera" type="Camera2D" parent="." unique_id=995484251]
 unique_name_in_owner = true
 position = Vector2(640, 360)
+limit_smoothed = true
 position_smoothing_enabled = true
 
 [node name="info" type="CanvasLayer" parent="." unique_id=565330861]

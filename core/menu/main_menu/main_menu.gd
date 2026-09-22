@@ -10,10 +10,12 @@ func _ready() -> void:
 	if !GlobalSound.music_player.playing:
 		GlobalSound.play_music(load("res://core/menu/music.ogg"))
 	
-	await get_tree().create_timer(0.02).timeout # avoid the camera bug, kill me
-	%camera.limit_top = %container.get_child(0).global_position.y - 100
-	%camera.limit_bottom = %container.get_child(%container.get_child_count() - 1).global_position.y + 200
-	change_item(0)
+	var init:Callable = func():
+		%camera.limit_top = %container.get_child(0).global_position.y - 100
+		%camera.limit_bottom = %container.get_child(%container.get_child_count() - 1).global_position.y + 200
+		change_item(0)
+	
+	init.call_deferred()
 
 func change_item(change:int = 0) -> void:
 	current_item = wrap(current_item + change, 0, %container.get_child_count())
