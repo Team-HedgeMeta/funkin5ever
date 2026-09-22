@@ -48,7 +48,7 @@ func get_chart(chart_path:String, difficulty:String = "normal") -> Chart:
 			chart.notes.push_back(data)
 		
 		if section.mustHitSection != prev_must_hit:
-			chart._camera_movement_markers.push_back({"time": section_time, "focus_player": section.mustHitSection})
+			chart._camera_movement_markers.push_back({"time": section_time, "focus_player": section.mustHitSection, "speed": 1.9, "ease": "expoOut"})
 			prev_must_hit = section.mustHitSection
 		
 		if section.get("changeBPM", false):

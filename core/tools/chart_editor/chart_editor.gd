@@ -156,11 +156,11 @@ func _process(delta: float) -> void:
 			if note.player == NoteData.PlayerType.PLAYER:
 				for character in song.hud.player_strumline.characters:
 					if character.has_animation(song.hud.player_strumline.skin.sing_animations[note.column]):
-						character.play_anim(song.hud.player_strumline.skin.sing_animations[note.column])
+						character.play_anim(song.hud.player_strumline.skin.sing_animations[note.column], true)
 			else:
 				for character in song.hud.opponent_strumline.characters:
 					if character.has_animation(song.hud.opponent_strumline.skin.sing_animations[note.column]):
-						character.play_anim(song.hud.opponent_strumline.skin.sing_animations[note.column])
+						character.play_anim(song.hud.opponent_strumline.skin.sing_animations[note.column], true)
 	
 	var snap:int = 1
 	%cursor.visible = (%extra_grid.position.x + (%extra_grid.columns * %extra_grid.grid_size.x) > ui.get_global_mouse_position().x) && (%opponent_grid.position.x < ui.get_global_mouse_position().x)

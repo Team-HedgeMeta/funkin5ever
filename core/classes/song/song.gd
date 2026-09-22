@@ -350,13 +350,34 @@ func import_camera_events() -> void:
 	# ok so we can finally convert shitz
 	var new_chart:Chart = new_meta.get_chart()
 	var song_animation:Animation = animation_player.get_animation("song")
+	new_chart.fix_markers()
 	
-	var camera_track:int = song_animation.add_track(Animation.TYPE_VALUE, 0)
+	var camera_track:int = song_animation.add_track(Animation.TYPE_VALUE)
+	var zoom_track:int = song_animation.add_track(Animation.TYPE_VALUE)
+	
 	song_animation.track_set_path(camera_track, NodePath(String(self.get_path_to(camera)) + ":position"))
+	song_animation.track_set_path(zoom_track, NodePath(String(self.get_path_to(camera)) + ":zoom"))
 	
 	var prev_position:Vector2 = camera.position
 	for marker in new_chart._camera_movement_markers:
 		var target:Vector2 = extra_data.get("player_camera_position") if marker.get("focus_player") else extra_data.get("opponent_camera_position")
-		song_animation.track_insert_key(camera_track, marker.get("time"), prev_position, 0.5)
-		song_animation.track_insert_key(camera_track, marker.get("time") + 1.1, target, 0)
+		if target == prev_position: continue
+		if marker.has("speed"):
+			song_animation.track_insert_key(camera_track, marker.get("time"), prev_position, Easing.from_string(marker.get("ease")))
+			song_animation.track_insert_key(camera_track, marker.get("time") + marker.get("speed"), target, 0)
+		else:
+			song_animation.track_insert_key(camera_track, marker.get("time"), target, 0)
 		prev_position = target
+	
+	var default_zoom:float = camera.zoom.x
+	var prev_zoom:Vector2 = camera.zoom
+	for marker in new_chart._camera_zoom_markers:
+		var zoom:float = default_zoom * marker.get("zoom") if !marker.get("direct") else marker.get("zoom")
+		var target:Vector2 = Vector2(zoom, zoom)
+		if target == prev_position: continue
+		if marker.has("speed"):
+			song_animation.track_insert_key(zoom_track, marker.get("time"), prev_zoom, Easing.from_string(marker.get("ease")))
+			song_animation.track_insert_key(zoom_track, marker.get("time") + marker.get("speed"), target, 0)
+		else:
+			song_animation.track_insert_key(zoom_track, marker.get("time"), target, 0)
+		prev_zoom = target

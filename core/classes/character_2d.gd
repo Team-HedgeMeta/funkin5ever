@@ -5,9 +5,7 @@ class_name Character2D
 @export var dance_animations:Array[String] = ["idle"]
 @export var animation_player:AnimationPlayer
 
-@export_category("Healthbar")
 @export var health_icon:HealthIconData
-@export var health_icon_scale:float = 1
 
 @export_category("Death Screen")
 @export var death_character:PackedScene = preload("res://core/gameplay/characters/bf/dead.tscn")

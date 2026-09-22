@@ -1,9 +1,9 @@
-[gd_scene format=3 uid="uid://dt1g7d2ypt1rb"]
+[gd_scene format=3 uid="uid://yknp6y3aoyn4"]
 
-[ext_resource type="Script" uid="uid://oknbil87oet5" path="res://core/classes/character_2d.gd" id="1_k2w8d"]
-[ext_resource type="Resource" uid="uid://bir23062gk6bs" path="res://core/gameplay/characters/bf/icon.tres" id="2_gartg"]
-[ext_resource type="SpriteFrames" uid="uid://brd5vfb5fms02" path="res://core/gameplay/characters/bf/BOYFRIEND.xml" id="2_k2w8d"]
-[ext_resource type="Script" uid="uid://s08545ch4u74" path="res://core/classes/extensions/animated_sprite_2d_ex.gd" id="3_gartg"]
+[ext_resource type="Script" uid="uid://oknbil87oet5" path="res://core/classes/character_2d.gd" id="1_u45ei"]
+[ext_resource type="Resource" uid="uid://bir23062gk6bs" path="res://core/gameplay/characters/bf/icon.tres" id="2_l8jxd"]
+[ext_resource type="SpriteFrames" uid="uid://bphk66cnpwsgo" path="res://core/gameplay/characters/gf/GF_assets.res" id="3_u45ei"]
+[ext_resource type="Script" uid="uid://s08545ch4u74" path="res://core/classes/extensions/animated_sprite_2d_ex.gd" id="4_rxbuw"]
 
 [sub_resource type="Animation" id="Animation_k2w8d"]
 length = 0.001
@@ -17,7 +17,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"BF idle dance"]
+"values": [&"GF Dancing Beat_left"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -44,8 +44,8 @@ tracks/2/keys = {
 "values": [Vector2(0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_gartg"]
-resource_name = "idle"
+[sub_resource type="Animation" id="Animation_rx24f"]
+resource_name = "cheer"
 length = 0.6
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -69,7 +69,47 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"BF idle dance"]
+"values": [&"GF Cheer"]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("sprite:offset")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -5)]
+}
+
+[sub_resource type="Animation" id="Animation_gartg"]
+resource_name = "dance_left"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("sprite:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"GF Dancing Beat_left"]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -82,6 +122,86 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_u45ei"]
+resource_name = "dance_right"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("sprite:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"GF Dancing Beat_right"]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("sprite:offset")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_l8jxd"]
+resource_name = "scared"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("sprite:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"GF FEAR "]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("sprite:offset")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 3)]
 }
 
 [sub_resource type="Animation" id="Animation_xue17"]
@@ -109,7 +229,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"BF NOTE DOWN"]
+"values": [&"GF Down Note"]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -121,7 +241,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 25)]
+"values": [Vector2(0, 5)]
 }
 
 [sub_resource type="Animation" id="Animation_2uusr"]
@@ -149,7 +269,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"BF NOTE LEFT"]
+"values": [&"GF left note"]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -161,7 +281,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(-22, 0)]
+"values": [Vector2(0, 5)]
 }
 
 [sub_resource type="Animation" id="Animation_m178m"]
@@ -189,7 +309,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"BF NOTE RIGHT"]
+"values": [&"GF Right Note"]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -201,7 +321,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(45, 2)]
+"values": [Vector2(0, 5)]
 }
 
 [sub_resource type="Animation" id="Animation_cp0bb"]
@@ -229,7 +349,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"BF NOTE UP"]
+"values": [&"GF Up Note"]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -241,32 +361,37 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(25, -15)]
+"values": [Vector2(0, -7)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xue17"]
 _data = {
 &"RESET": SubResource("Animation_k2w8d"),
-&"idle": SubResource("Animation_gartg"),
+&"cheer": SubResource("Animation_rx24f"),
+&"dance_left": SubResource("Animation_gartg"),
+&"dance_right": SubResource("Animation_u45ei"),
+&"scared": SubResource("Animation_l8jxd"),
 &"sing_down": SubResource("Animation_xue17"),
 &"sing_left": SubResource("Animation_2uusr"),
 &"sing_right": SubResource("Animation_m178m"),
 &"sing_up": SubResource("Animation_cp0bb")
 }
 
-[node name="bf" type="Node2D" unique_id=357572308 node_paths=PackedStringArray("animation_player")]
+[node name="gf" type="Node2D" unique_id=357572308 node_paths=PackedStringArray("animation_player")]
 use_parent_material = true
-script = ExtResource("1_k2w8d")
+script = ExtResource("1_u45ei")
+character_type = 2
+dance_animations = Array[String](["dance_left", "dance_right"])
 animation_player = NodePath("animation_player")
-health_icon = ExtResource("2_gartg")
+health_icon = ExtResource("2_l8jxd")
 metadata/_custom_type_script = "uid://oknbil87oet5"
 
 [node name="sprite" type="AnimatedSprite2D" parent="." unique_id=1292250224]
 use_parent_material = true
-position = Vector2(0, -160)
-sprite_frames = ExtResource("2_k2w8d")
-animation = &"BF idle dance"
-script = ExtResource("3_gartg")
+position = Vector2(0, -321)
+sprite_frames = ExtResource("3_u45ei")
+animation = &"GF Dancing Beat_left"
+script = ExtResource("4_rxbuw")
 metadata/_custom_type_script = "uid://s08545ch4u74"
 
 [node name="animation_player" type="AnimationPlayer" parent="." unique_id=490577872]
