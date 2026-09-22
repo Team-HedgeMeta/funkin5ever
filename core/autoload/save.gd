@@ -8,7 +8,7 @@ func _init() -> void:
 	load_save()
 
 func load_save() -> void:
-	if FileAccess.file_exists("user://save"):
+	if FileAccess.file_exists("user://scores"):
 		var f = FileAccess.open_encrypted_with_pass("user://scores", FileAccess.READ, ENCRYPTION_KEY)
 		scores = str_to_var(f.get_as_text())
 		f.close()
