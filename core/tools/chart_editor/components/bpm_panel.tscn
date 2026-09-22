@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://im3hsysfv21h"]
+
+[ext_resource type="Theme" uid="uid://6shp5ck1tnja" path="res://core/tools/ui/kenney_ui.tres" id="1_8xkln"]
+[ext_resource type="Script" uid="uid://6d88lotsxj4f" path="res://core/tools/chart_editor/components/bpm_panel.gd" id="2_ngaxe"]
+
+[node name="bpm_panel" type="CanvasLayer" unique_id=753455906]
+layer = 5
+script = ExtResource("2_ngaxe")
+
+[node name="bg" type="ColorRect" parent="." unique_id=2123198808]
+modulate = Color(1, 1, 1, 0.4)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="panel" type="Panel" parent="." unique_id=1758327402]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -64.0
+offset_right = 192.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_8xkln")
+
+[node name="h_box_container" type="VBoxContainer" parent="panel" unique_id=372336911]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 376.0
+offset_bottom = 88.0
+
+[node name="v_box_container" type="HBoxContainer" parent="panel/h_box_container" unique_id=561240999]
+layout_mode = 2
+
+[node name="label" type="Label" parent="panel/h_box_container/v_box_container" unique_id=1616905895]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "BPM: "
+
+[node name="bpm_input" type="LineEdit" parent="panel/h_box_container/v_box_container" unique_id=793270820]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "120"
+
+[node name="v_box_container2" type="HBoxContainer" parent="panel/h_box_container" unique_id=474110041]
+layout_mode = 2
+
+[node name="label" type="Label" parent="panel/h_box_container/v_box_container2" unique_id=1893828970]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Time Signature: "
+
+[node name="denominator_input" type="LineEdit" parent="panel/h_box_container/v_box_container2" unique_id=2000500211]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "4"
+
+[node name="label4" type="Label" parent="panel/h_box_container/v_box_container2" unique_id=983459384]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "/"
+
+[node name="numerator_input" type="LineEdit" parent="panel/h_box_container/v_box_container2" unique_id=1676722128]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "4"
+
+[node name="add_button" type="Button" parent="panel/h_box_container" unique_id=2089484088]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "ADD"

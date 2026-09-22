@@ -3,8 +3,8 @@ class_name NoteData
 
 enum PlayerType
 {
-	PLAYER,
 	OPPONENT,
+	PLAYER,
 	EXTRA
 }
 

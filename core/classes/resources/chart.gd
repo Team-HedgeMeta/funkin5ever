@@ -3,7 +3,7 @@
 extends Resource
 class_name Chart
 
-static var CHART_FORMATS = [VSliceChart, CodenameChart, NightmareVisionChart, PsychChart]
+static var CHART_FORMATS = [Funkin5everChart, VSliceChart, CodenameChart, NightmareVisionChart, PsychChart]
 
 var _song_id:String = ""
 var _difficulty:String = ""

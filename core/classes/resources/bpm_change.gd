@@ -10,4 +10,4 @@ func _init(_time:float = 0, _bpm:float = 100, _denominator:float = 4, _numerator
 	self.time = _time
 	self.bpm = _bpm
 	self.denominator = _denominator
-	self. numerator = _numerator
+	self.numerator = _numerator

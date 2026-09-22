@@ -38,7 +38,7 @@ func _ready() -> void:
 		Conductor.instance.beat_hit.connect(beat_hit)
 	if is_instance_valid(Song.current.countdown):
 		Song.current.countdown.countdown_step.connect(beat_hit)
-		
+	
 	match character_type:
 		NoteData.PlayerType.PLAYER:
 			strumline = Song.current.hud.player_strumline

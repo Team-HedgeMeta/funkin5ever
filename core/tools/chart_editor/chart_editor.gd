@@ -32,6 +32,7 @@ func _ready() -> void:
 	DiscordRPC.start_timestamp = int(Time.get_unix_time_from_system())
 	DiscordRPC.refresh()
 	
+	%save_dialogue.file_selected.connect(save)
 	
 	%bg.modulate.a = 0
 	%grid.position.x += 500
@@ -57,7 +58,13 @@ func _ready() -> void:
 	song.chart.sort()
 	for note_data in song.chart.notes:
 		add_note(note_data)
-
+	
+	if song.chart.bpm_changes.is_empty():
+		var panel:ChartEditorBPMPanel = load("res://core/tools/chart_editor/components/bpm_panel.tscn").instantiate()
+		panel.closable = false
+		panel.editor = self
+		panel.position = 0
+		add_child(panel)
 func _process(delta: float) -> void:
 	if song.animation_player.is_playing():
 		conductor.song_position = song.animation_player.current_animation_position
@@ -72,71 +79,20 @@ func _process(delta: float) -> void:
 	elif Input.is_action_just_pressed("ui_redo"):
 		undo_redo.redo()
 	elif Input.is_action_just_pressed("ui_copy"):
-		if !selected_notes.is_empty():
-			var copy_data:Array[NoteData] = []
-			for note:Note in selected_notes: copy_data.push_back(note.data)
-			copy_data.sort_custom(_sort_note_data)
-			
-			clipboard = ChartEditorClipboard.new(copy_data[0].time)
-			clipboard.notes = copy_data
+		copy_selected()
 	elif Input.is_action_just_pressed("ui_cut"):
-		if !selected_notes.is_empty():
-			undo_redo.create_action("Cut Note(s)")
-			
-			var cut_data:Array[NoteData] = []
-			for note:Note in selected_notes: cut_data.push_back(note.data)
-			cut_data.sort_custom(_sort_note_data)
-			
-			clipboard = ChartEditorClipboard.new(cut_data[0].time)
-			for n in cut_data:
-				clipboard.notes.push_back(n)
-			
-			undo_redo.add_do_method(func():
-				for note in selected_notes:
-					erase_note(note)
-			)
-			undo_redo.add_undo_method(func():
-				for data in cut_data:
-					add_note(data)
-			)
-			
-			undo_redo.commit_action()
+		cut_selected()
 	elif Input.is_action_just_pressed("ui_paste"):
-		if clipboard != null:
-			undo_redo.create_action("Paste Note(s)")
-			
-			var time = clipboard.time
-			var notes = clipboard.notes
-			
-			selected_notes.clear()
-			
-			var pasted_notes:Array[Note] = []
-			undo_redo.add_do_method(func():
-				for note in notes:
-					var new_data:NoteData = note.duplicate(true)
-					new_data.time = note.time - time + conductor.get_time_from_step((%cursor.position.y - grid_initial_y) / %player_grid.grid_size.y)
-					new_data.player = get_mouse_overlap_player()
-					var n:Note = add_note(new_data)
-					pasted_notes.push_back(n)
-					selected_notes.push_back(n)
-			)
-			undo_redo.add_undo_method(func():
-				for note in pasted_notes:
-					erase_note(note)
-			)
-				
-			undo_redo.commit_action()
+		paste()
+	elif Input.is_action_just_pressed("ui_text_select_all"):
+		select_all()
+	elif Input.is_action_just_pressed("editor_save"):
+		if Input.is_action_pressed("editor_shift"):
+			save_as()
+		else:
+			save()
 	elif Input.is_action_just_pressed("ui_accept"):
-		Discord.song()
-		if !song.animation_player.is_playing():
-			song.animation_player.play()
-		if Input.is_action_pressed("editor_ctrl"):
-			song.animation_player.seek(0)
-		song.hud_layer.visible = true
-		song.in_chart_editor = false
-		DebugDisplay.label.visible = true
-		song.load_notes()
-		self.queue_free()
+		exit()
 	
 	for note:Note in note_group.get_children():
 		if selected_notes.has(note):
@@ -260,12 +216,23 @@ func erase_note(note:Note) -> void:
 	if selected_notes.has(note): selected_notes.erase(note)
 	note.queue_free()
 
-func _sort_note(a: Note, b: Note) -> bool:
-	if a.data.time < b.data.time:
+func _sort_note_data(a: NoteData, b: NoteData) -> bool:
+	if a.time < b.time:
 		return true
 	return false
 
-func _sort_note_data(a: NoteData, b: NoteData) -> bool:
+func add_bpm_change(change:BPMChange) -> void:
+	song.chart.bpm_changes.push_back(change)
+	song.chart.bpm_changes.sort_custom(_sort_bpm_change)
+	conductor.set_bpm_changes(song.chart.bpm_changes)
+	update_note_times()
+	
+func erase_bpm_change(note:Note) -> void:
+	song.chart.notes.erase(note.data)
+	if selected_notes.has(note): selected_notes.erase(note)
+	note.queue_free()
+
+func _sort_bpm_change(a: BPMChange, b: BPMChange) -> bool:
 	if a.time < b.time:
 		return true
 	return false
@@ -288,3 +255,102 @@ func get_grid(player:NoteData.PlayerType) -> ChartEditorGrid:
 
 func get_mouse_lane() -> int:
 	return absi(floor((ui.get_global_mouse_position().x - %opponent_grid.global_position.x) / %opponent_grid.grid_size.x)) % 4
+
+func exit() -> void:
+	song.chart.sort()
+	
+	Discord.song()
+	if !song.animation_player.is_playing():
+		song.animation_player.play()
+	if Input.is_action_pressed("editor_ctrl"):
+		song.animation_player.seek(0)
+	song.hud_layer.visible = true
+	song.in_chart_editor = false
+	DebugDisplay.label.visible = true
+	song.load_notes()
+	self.queue_free()
+	
+func copy_selected() -> void:
+	if !selected_notes.is_empty():
+		var copy_data:Array[NoteData] = []
+		for note:Note in selected_notes: copy_data.push_back(note.data)
+		copy_data.sort_custom(_sort_note_data)
+		
+		clipboard = ChartEditorClipboard.new(copy_data[0].time)
+		clipboard.notes = copy_data
+
+func cut_selected() -> void:
+	if !selected_notes.is_empty():
+		undo_redo.create_action("Cut Note(s)")
+		
+		var cut_data:Array[NoteData] = []
+		for note:Note in selected_notes: cut_data.push_back(note.data)
+		cut_data.sort_custom(_sort_note_data)
+		
+		clipboard = ChartEditorClipboard.new(cut_data[0].time)
+		for n in cut_data:
+			clipboard.notes.push_back(n)
+		
+		undo_redo.add_do_method(func():
+			for note in selected_notes:
+				erase_note(note)
+		)
+		undo_redo.add_undo_method(func():
+			for data in cut_data:
+				add_note(data)
+		)
+		
+		undo_redo.commit_action()
+
+func paste() -> void:
+	if clipboard != null:
+		undo_redo.create_action("Paste Note(s)")
+		
+		var time = clipboard.time
+		var notes = clipboard.notes
+		
+		selected_notes.clear()
+		
+		var pasted_notes:Array[Note] = []
+		undo_redo.add_do_method(func():
+			for note in notes:
+				var new_data:NoteData = note.duplicate(true)
+				new_data.time = note.time - time + conductor.get_time_from_step((%cursor.position.y - grid_initial_y) / %player_grid.grid_size.y)
+				new_data.player = get_mouse_overlap_player()
+				var n:Note = add_note(new_data)
+				pasted_notes.push_back(n)
+				selected_notes.push_back(n)
+		)
+		undo_redo.add_undo_method(func():
+			for note in pasted_notes:
+				erase_note(note)
+		)
+		
+		undo_redo.commit_action()
+
+func select_all() -> void:
+	selected_notes.clear()
+	for note in note_group.get_children():
+		selected_notes.push_back(note)
+
+func save(dir:String = "") -> void:
+	var target:String = dir
+	if target.is_empty():
+		var folder:String = ContentManager.get_content_path("gameplay/songs/" + song.meta._song_id)
+		print(folder)
+		if DirAccess.dir_exists_absolute(folder):
+			target = folder.path_join("charts/" + song.chart._difficulty + ".json")
+		else:
+			save_as()
+			return
+	
+	var file:FileAccess = FileAccess.open(target, FileAccess.WRITE)
+	file.store_string(Funkin5everChart.export_string(song.chart))
+	file.close()
+
+func save_as() -> void:
+	%save_dialogue.visible = true
+
+func update_note_times() -> void:
+	for note:Note in note_group.get_children():
+		note.data.time = conductor.get_time_from_step((note.global_position.y - grid_initial_y) / %player_grid.grid_size.y)

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bvummk0v2bhdo" path="res://core/tools/chart_editor/chart_editor.gd" id="1_v8k0a"]
 [ext_resource type="Theme" uid="uid://6shp5ck1tnja" path="res://core/tools/ui/kenney_ui.tres" id="3_drfku"]
 [ext_resource type="PackedScene" uid="uid://d31dii0nu8h6e" path="res://core/tools/chart_editor/components/info_panel.tscn" id="4_4r4a2"]
+[ext_resource type="PackedScene" uid="uid://cuuq4vdumx5uo" path="res://core/tools/chart_editor/components/menu_bar.tscn" id="4_foobb"]
 [ext_resource type="Script" uid="uid://b5ihuoh8ox8xb" path="res://core/tools/chart_editor/grid.gd" id="5_f0vu5"]
 
 [node name="chart_editor" type="CanvasLayer" unique_id=145142204]
@@ -147,66 +148,15 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("3_drfku")
 
-[node name="upper_panel" type="Panel" parent="ui" unique_id=460277210]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -640.0
-offset_right = 640.0
-offset_bottom = 40.0
-grow_horizontal = 2
-
-[node name="h_box_container" type="HBoxContainer" parent="ui/upper_panel" unique_id=1765630194]
+[node name="menu_bar" parent="ui" unique_id=712000342 node_paths=PackedStringArray("editor") instance=ExtResource("4_foobb")]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="file" type="MenuButton" parent="ui/upper_panel/h_box_container" unique_id=1880106850]
-layout_mode = 2
-text = "File"
-item_count = 2
-popup/item_0/text = "Save Song (Ctrl + S)"
-popup/item_0/id = 0
-popup/item_1/text = "Exit"
-popup/item_1/id = 1
-
-[node name="edit" type="MenuButton" parent="ui/upper_panel/h_box_container" unique_id=800021403]
-layout_mode = 2
-text = "Edit"
-item_count = 9
-popup/item_0/text = "Undo"
-popup/item_0/id = 0
-popup/item_1/text = "Redo"
-popup/item_1/id = 1
-popup/item_2/id = 2
-popup/item_2/separator = true
-popup/item_3/text = "Cut"
-popup/item_3/id = 3
-popup/item_4/text = "Copy"
-popup/item_4/id = 4
-popup/item_5/text = "Paste"
-popup/item_5/id = 5
-popup/item_6/id = 6
-popup/item_6/separator = true
-popup/item_7/text = "Select All"
-popup/item_7/id = 7
-popup/item_8/text = "Deselect All"
-popup/item_8/id = 8
-
-[node name="view" type="MenuButton" parent="ui/upper_panel/h_box_container" unique_id=55778177]
-layout_mode = 2
-text = "View"
-item_count = 1
-popup/item_0/text = "AAAA"
-popup/item_0/id = 0
-
-[node name="snap" type="MenuButton" parent="ui/upper_panel/h_box_container" unique_id=452936940]
-layout_mode = 2
-text = "Snap"
-item_count = 1
-popup/item_0/text = "AAAA"
-popup/item_0/id = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 0.0
+offset_right = 1280.0
+grow_horizontal = 1
+editor = NodePath("../..")
 
 [node name="info_panel" parent="ui" unique_id=481928429 node_paths=PackedStringArray("editor") instance=ExtResource("4_4r4a2")]
 layout_mode = 1
@@ -219,3 +169,10 @@ offset_right = -16.0
 offset_bottom = 216.0
 grow_vertical = 1
 editor = NodePath("../..")
+
+[node name="save_dialogue" type="FileDialog" parent="." unique_id=380457433]
+unique_name_in_owner = true
+title = "Save Chart"
+dialog_hide_on_ok = true
+access = 2
+use_native_dialog = true

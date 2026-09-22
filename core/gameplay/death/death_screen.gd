@@ -18,7 +18,10 @@ func _ready() -> void:
 	var origin_character = Song.current.hud.player_strumline.characters[0]
 	character = origin_character.death_character.instantiate()
 	add_child(character)
-	character.global_position = origin_character.global_position
+	if origin_character is Character3D:
+		character.global_position = Vector2(origin_character.global_position.x, origin_character.global_position.y)
+	else:
+		character.global_position = origin_character.global_position
 	
 	conductor = Conductor.new(false)
 	conductor.set_bpm_changes([BPMChange.new(0, character.death_music_bpm)])
