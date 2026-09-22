@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://cedf8dyape7ib"]
+
+[ext_resource type="Script" uid="uid://b5ueobocgnt0q" path="res://core/gameplay/pause_screen.gd" id="1_abme8"]
+[ext_resource type="FontFile" uid="uid://c7euvp5baixmv" path="res://core/fonts/alphabet.png" id="2_a2pod"]
+[ext_resource type="FontFile" uid="uid://bqhu0u6tgswpv" path="res://core/fonts/vcr.ttf" id="3_suk3x"]
+
+[node name="pause_screen" type="CanvasLayer" unique_id=1935123464]
+process_mode = 2
+layer = 50
+script = ExtResource("1_abme8")
+
+[node name="color_rect" type="ColorRect" parent="." unique_id=1965797013]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="items" type="VBoxContainer" parent="." unique_id=1925125752]
+unique_name_in_owner = true
+offset_left = 56.0
+offset_right = 754.0
+offset_bottom = 728.0
+theme_override_constants/separation = 16
+
+[node name="resume" type="Label" parent="items" unique_id=131977534]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_a2pod")
+theme_override_font_sizes/font_size = 86
+text = "RESUME"
+
+[node name="skip_cutscene" type="Label" parent="items" unique_id=391255356]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_a2pod")
+theme_override_font_sizes/font_size = 86
+text = "SKIP CUTSCENE"
+
+[node name="restart" type="Label" parent="items" unique_id=580119275]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_a2pod")
+theme_override_font_sizes/font_size = 86
+text = "RESTART SONG"
+
+[node name="options" type="Label" parent="items" unique_id=1936861796]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_a2pod")
+theme_override_font_sizes/font_size = 86
+text = "OPTIONS"
+
+[node name="exit" type="Label" parent="items" unique_id=1458052248]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_a2pod")
+theme_override_font_sizes/font_size = 86
+text = "EXIT TO MENU"
+
+[node name="song_name" type="Label" parent="." unique_id=659107128]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -832.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 48.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("3_suk3x")
+theme_override_font_sizes/font_size = 36
+text = "SONG NAME"
+horizontal_alignment = 2
+
+[node name="difficulty" type="Label" parent="." unique_id=459278419]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -832.0
+offset_top = 56.0
+offset_right = -16.0
+offset_bottom = 88.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("3_suk3x")
+theme_override_font_sizes/font_size = 36
+text = "HARD"
+horizontal_alignment = 2
+
+[node name="artist" type="Label" parent="." unique_id=1267096475]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -832.0
+offset_top = 96.0
+offset_right = -16.0
+offset_bottom = 128.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("3_suk3x")
+theme_override_font_sizes/font_size = 36
+text = "Artist: Unknown"
+horizontal_alignment = 2
+
+[node name="charter" type="Label" parent="." unique_id=611855707]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -832.0
+offset_top = 136.0
+offset_right = -16.0
+offset_bottom = 168.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("3_suk3x")
+theme_override_font_sizes/font_size = 36
+text = "Charter: Unknown"
+horizontal_alignment = 2

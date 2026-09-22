@@ -17,6 +17,9 @@ static var story_stats:GameStats
 static var game_mode:GameMode = GameMode.FREEPLAY
 static var return_scene:PackedScene
 
+static var played_intro_cutscene:bool = false
+static var played_end_cutscene:bool = false
+
 @export var animation_player:AnimationPlayer
 
 @export var skip_countdown:bool = false
@@ -26,6 +29,7 @@ static var return_scene:PackedScene
 @export var hud_scene:PackedScene = preload("res://core/gameplay/hud/default.tscn")
 @export var countdown_skin:CountdownSkin = preload("res://core/gameplay/countdown/default/skin.tres")
 @export var pause_scene:PackedScene = preload("res://core/gameplay/pause_screen.tscn")
+@export var cutscene_pause_scene:PackedScene = preload("res://core/gameplay/pause_screen_cutscene.tscn")
 @export var death_scene = preload("res://core/gameplay/death/death_screen.tscn")
 
 @export_category("Tools")
@@ -82,6 +86,7 @@ func _ready() -> void:
 	
 	conductor = Conductor.new()
 	add_child(conductor)
+	conductor.song_position = -1000
 	conductor.beat_hit.connect(_on_beat_hit)
 	
 	if chart == null: chart = meta.get_chart(difficulty)
@@ -93,10 +98,12 @@ func _ready() -> void:
 		if in_chart_editor: return
 		match n:
 			"intro_cutscene":
+				played_intro_cutscene = true
 				_start_countdown()
 			"song":
 				_song_finished()
 			"end_cutscene":
+				played_end_cutscene = true
 				_song_exit()
 			
 	)
@@ -151,7 +158,7 @@ func _ready() -> void:
 	
 	_before_ready_post.emit()
 	
-	if animation_player.has_animation("intro_cutscene"):
+	if animation_player.has_animation("intro_cutscene") && !played_intro_cutscene:
 		in_cutscene = true
 		animation_player.play("intro_cutscene")
 	else:
@@ -234,20 +241,25 @@ func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 	if !in_chart_editor:
-		if !in_cutscene && animation_player.is_playing():
-			conductor.song_position = animation_player.current_animation_position
-		else:
-			conductor.song_position += delta
+		if !in_cutscene:
+			if animation_player.is_playing():
+				conductor.song_position = animation_player.current_animation_position
+			else:
+				conductor.song_position += delta
 		
 		for script in scripts:
 			script._process(delta)
 		
 		if Input.is_action_just_pressed("ui_accept"):
-			var pause = pause_scene.instantiate()
-			add_child(pause)
+			if in_cutscene:
+				var pause = cutscene_pause_scene.instantiate()
+				add_child(pause)
+			else:
+				var pause = pause_scene.instantiate()
+				add_child(pause)
 			get_tree().paused = true
 		
-		if Input.is_action_just_pressed("debug_chart_editor"):
+		if Input.is_action_just_pressed("debug_chart_editor") && !in_cutscene:
 			var editor:ChartEditor = load("res://core/tools/chart_editor/chart_editor.tscn").instantiate()
 			add_child(editor)
 
@@ -273,14 +285,12 @@ func _on_beat_hit(beat:int) -> void:
 
 func _on_exit() -> void:
 	for script in scripts:
+		script._on_exit()
 		script.queue_free()
 		scripts.erase(script)
 	
-	Discord.menu()
-	GlobalSound.play_music(load("res://core/menu/music.ogg"))
-	
 func _song_finished() -> void:
-	if animation_player.has_animation("end_cutscene"):
+	if animation_player.has_animation("end_cutscene") && !played_end_cutscene:
 		in_cutscene = true
 		animation_player.play("end_cutscene")
 	else:
@@ -302,6 +312,7 @@ func _song_exit() -> void:
 				playlist.pop_front()
 				chart = playlist[0].get_chart(difficulty)
 				Transition.switch_scene(playlist[0].get_scene())
+				return
 			else:
 				var key:String = story_level + ":" + chart._difficulty
 				if Save.scores.has(key):
@@ -312,6 +323,7 @@ func _song_exit() -> void:
 					Save.scores.set(key, story_stats)
 				Save.save()
 				story_stats = null
+				
 				Transition.switch_scene(return_scene)
 		_: #GameMode.FREEPLAY
 			story_stats = null
@@ -323,7 +335,11 @@ func _song_exit() -> void:
 			else:
 				Save.scores.set(key, stats)
 			Save.save()
+			
 			Transition.switch_scene(return_scene)
+	
+	Discord.menu()
+	GlobalSound.play_music(load("res://core/menu/music.ogg"))
 
 func import_camera_events() -> void:
 	if !Engine.is_editor_hint():

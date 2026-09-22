@@ -34,4 +34,5 @@ func _on_note_miss(note:Note, strumline:Strumline): pass
 @warning_ignore("unused_parameter")
 func _on_ghost_tap(strumline:Strumline): pass
 
+func _on_exit(): pass
 func _on_song_finish(): pass

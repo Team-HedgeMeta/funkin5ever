@@ -29,27 +29,46 @@ func _process(_delta: float) -> void:
 	elif Input.is_action_just_pressed("ui_down"):
 		change_item(1)
 	elif Input.is_action_just_pressed("ui_accept"):
-		match $items.get_children()[current_item].name:
-			"resume":
-				Discord.song()
-				get_tree().paused = false
-				self.queue_free()
-			"restart":
-				get_tree().paused = false
-				get_parent().process_mode = Node.PROCESS_MODE_DISABLED
-				Song.current._on_exit()
-				Transition.switch_scene(load(Song.current.scene_file_path))
-			"options":
-				get_tree().paused = false
-				get_parent().process_mode = Node.PROCESS_MODE_DISABLED
-				Song.current._on_exit()
-				MainConfigMenu.return_scene = Song.current.scene_file_path
-				Transition.switch_scene(load("res://core/menu/config_menu/main_config.tscn"))
-			"exit":
-				get_tree().paused = false
-				get_parent().process_mode = Node.PROCESS_MODE_DISABLED
-				Song.current._on_exit()
-				Transition.switch_scene(Song.return_scene)
+		do_action($items.get_children()[current_item].name)
 	
 	for item in %items.get_children():
 		item.modulate.a = 1 if item.get_index() == current_item else 0.5
+
+func do_action(action:String) -> void:
+	match action:
+		"resume":
+			Discord.song()
+			get_tree().paused = false
+			self.queue_free()
+		"restart":
+			get_tree().paused = false
+			get_parent().process_mode = Node.PROCESS_MODE_DISABLED
+			Song.current._on_exit()
+			Transition.switch_scene(load(Song.current.scene_file_path))
+		"options":
+			get_tree().paused = false
+			get_parent().process_mode = Node.PROCESS_MODE_DISABLED
+			Song.current._on_exit()
+			MainConfigMenu.return_scene = Song.current.scene_file_path
+			Transition.switch_scene(load("res://core/menu/config_menu/main_config.tscn"))
+		"exit":
+			get_tree().paused = false
+			get_parent().process_mode = Node.PROCESS_MODE_DISABLED
+			Song.current._on_exit()
+			Song.played_intro_cutscene = false
+			Song.played_end_cutscene = false
+			
+			Discord.menu()
+			GlobalSound.play_music(load("res://core/menu/music.ogg"))
+			
+			Transition.switch_scene(Song.return_scene)
+		# CUTSCENE
+		"skip_cutscene":
+			Discord.song()
+			get_tree().paused = false
+			
+			var thing = func():
+				Song.current.animation_player.advance(Song.current.animation_player.current_animation_length - Song.current.animation_player.current_animation_position)
+			thing.call_deferred()
+			
+			self.queue_free()

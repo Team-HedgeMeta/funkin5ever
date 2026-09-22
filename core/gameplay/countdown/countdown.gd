@@ -59,7 +59,8 @@ func start() -> void:
 
 func cancel() -> void:
 	if current_step == 4: return
-	countdown_timer.cancel_free()
+	if is_instance_valid(countdown_timer):
+		countdown_timer.cancel_free()
 	sound.stop()
 	sprite.visible = false
 	self.queue_free()
