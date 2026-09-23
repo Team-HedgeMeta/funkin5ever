@@ -34,7 +34,18 @@ Shortcuts/density_decrement=Object(Shortcut,"resource_local_to_scene":false,"res
 
 [application]
 
-config/name="funkin5ever"
+config/name="Hedgehog Metaverse"
+config/description="メタバース空間で繰り広げられる真新しい体験へようこそ。
+
+あなたは主人公であるBoyfriendの彼女、Girlfriendがサプライズで持ってきたプレゼントに発生したトラブルを機に「Hedgehog Metaverse」という不完全な仮想空間へと移植されます。
+
+脱出手段が完成されていないこの空間から抜け出すため、TeamMateという会社のデバッガーとして制作に貢献しながらラッパーとしてさまざまな相手と対面して行き、プロジェクトを完成させて脱出するのがあなたの任務となります。
+
+上記を踏まえた上で、任務を完璧に遂行するためのノウハウをいくつかあなたに伝授いたします。
+
+【合法的な「粗」探し】
+あなたはプロジェクトのデバッカーとして、数々のコースのデバッグ作業を任されます。
+コースに設置された敵が障害物を貫通したり、敵の攻撃力が特定の条件下で高くなったり、さまざまな「粗」を見つけてその発生原因を特定することがあなたの任務です。"
 config/version="0.0.1"
 run/main_scene="uid://dvdlx4vsl1phr"
 config/features=PackedStringArray("4.7", "Forward Plus")
@@ -54,11 +65,12 @@ Discord="*uid://ip08qtqu07u6"
 CustomAutoload="*uid://unbqn0vhmayy"
 Soundtray="*uid://cddrk8u35crnh"
 Easing="*uid://brx5eru4ugfdw"
+SimpleGrass="*uid://bfq0snth8sj3h"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
 
 [editor]
