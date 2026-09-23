@@ -54,7 +54,6 @@ Discord="*uid://ip08qtqu07u6"
 CustomAutoload="*uid://unbqn0vhmayy"
 Soundtray="*uid://cddrk8u35crnh"
 Easing="*uid://brx5eru4ugfdw"
-SimpleGrass="*uid://bfq0snth8sj3h"
 
 [display]
 
@@ -68,7 +67,7 @@ naming/node_name_casing=2
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/camera_preview/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/gdanimate/plugin.cfg", "res://addons/godot_sparrow/plugin.cfg", "res://addons/parallax2d_preview/plugin.cfg", "res://addons/quick_notes_dock/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg", "res://addons/spriteframes_keyframer/plugin.cfg")
+enabled=PackedStringArray("res://addons/camera_preview/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/gdanimate/plugin.cfg", "res://addons/godot_sparrow/plugin.cfg", "res://addons/parallax2d_preview/plugin.cfg", "res://addons/quick_notes_dock/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
 
 [file_customization]
 
