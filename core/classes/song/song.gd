@@ -21,6 +21,7 @@ static var played_intro_cutscene:bool = false
 static var played_end_cutscene:bool = false
 
 @export var animation_player:AnimationPlayer
+@export var world_projector:WorldProjector
 
 @export var skip_countdown:bool = false
 @export var camera_bop_interval:int = 4
@@ -93,6 +94,9 @@ func _ready() -> void:
 	conductor.set_bpm_changes(chart.bpm_changes)
 	
 	stats = GameStats.new()
+	
+	if is_instance_valid(world_projector) && is_instance_valid(world_projector.world.animation_player) && !is_instance_valid(animation_player):
+		animation_player = world_projector.world.animation_player
 	
 	animation_player.animation_finished.connect(func(n):
 		if in_chart_editor: return

@@ -79,7 +79,7 @@ naming/node_name_casing=2
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/camera_preview/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/gdanimate/plugin.cfg", "res://addons/godot_sparrow/plugin.cfg", "res://addons/parallax2d_preview/plugin.cfg", "res://addons/quick_notes_dock/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
+enabled=PackedStringArray("res://addons/camera_preview/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/gdanimate/plugin.cfg", "res://addons/godot_sparrow/plugin.cfg", "res://addons/parallax2d_preview/plugin.cfg", "res://addons/quick_notes_dock/plugin.cfg")
 
 [file_customization]
 
@@ -153,10 +153,6 @@ editor_shift={
 ]
 }
 
-[layer_names]
-
-3d_render/layer_17="SimpleGrassTextured interactive layer"
-
 [physics]
 
 3d/physics_engine="Jolt Physics"
@@ -164,46 +160,3 @@ editor_shift={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
-
-[shader_globals]
-
-sgt_legacy_renderer={
-"type": "int",
-"value": 0
-}
-sgt_player_position={
-"type": "vec3",
-"value": Vector3(1000000, 1000000, 1000000)
-}
-sgt_player_mov={
-"type": "vec3",
-"value": Vector3(0, 0, 0)
-}
-sgt_normal_displacement={
-"type": "sampler2D",
-"value": "res://addons/simplegrasstextured/images/normal.png"
-}
-sgt_motion_texture={
-"type": "sampler2D",
-"value": "res://addons/simplegrasstextured/images/motion.png"
-}
-sgt_wind_direction={
-"type": "vec3",
-"value": Vector3(1, 0, 0)
-}
-sgt_wind_movement={
-"type": "vec3",
-"value": Vector2(0, 0)
-}
-sgt_wind_strength={
-"type": "float",
-"value": 0.15
-}
-sgt_wind_turbulence={
-"type": "float",
-"value": 1.0
-}
-sgt_wind_pattern={
-"type": "sampler2D",
-"value": "res://addons/simplegrasstextured/images/wind_pattern.png"
-}

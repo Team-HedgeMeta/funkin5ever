@@ -30,12 +30,12 @@ func fix_markers() -> void:
 	for marker in _camera_movement_markers:
 		if prev_marker != null && prev_marker.has("time"):
 			if marker.get("time") < prev_marker.get("time") + prev_marker.get("speed"):
-				prev_marker.set("speed", marker.get("time"))
+				prev_marker.set("speed", marker.get("time") - 0.1)
 		prev_marker = marker
 	
 	var prev_cam_marker:Dictionary
 	for marker in _camera_zoom_markers:
 		if prev_cam_marker != null && prev_cam_marker.has("time"):
 			if marker.get("time") < prev_cam_marker.get("time") + prev_cam_marker.get("speed"):
-				prev_cam_marker.set("speed", marker.get("time"))
+				prev_cam_marker.set("speed", marker.get("time") - 0.1)
 		prev_cam_marker = marker
