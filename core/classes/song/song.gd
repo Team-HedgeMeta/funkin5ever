@@ -30,7 +30,6 @@ static var played_end_cutscene:bool = false
 @export var hud_scene:PackedScene = preload("res://core/gameplay/hud/default.tscn")
 @export var countdown_skin:CountdownSkin = preload("res://core/gameplay/countdown/default/skin.tres")
 @export var pause_scene:PackedScene = preload("res://core/gameplay/pause_screen.tscn")
-@export var cutscene_pause_scene:PackedScene = preload("res://core/gameplay/pause_screen_cutscene.tscn")
 @export var death_scene = preload("res://core/gameplay/death/death_screen.tscn")
 
 @export_category("Tools")
@@ -255,12 +254,8 @@ func _process(delta: float) -> void:
 			script._process(delta)
 		
 		if Input.is_action_just_pressed("ui_accept"):
-			if in_cutscene:
-				var pause = cutscene_pause_scene.instantiate()
-				add_child(pause)
-			else:
-				var pause = pause_scene.instantiate()
-				add_child(pause)
+			var pause = pause_scene.instantiate()
+			add_child(pause)
 			get_tree().paused = true
 		
 		if Input.is_action_just_pressed("debug_chart_editor") && !in_cutscene:
