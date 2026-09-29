@@ -74,7 +74,7 @@ func _process(delta: float) -> void:
 			%sustain.global_position.y = self.global_position.y
 			%sustain.scale.y = (data.length / Conductor.instance.get_step_crotchet(data.time)) * (strumline.scroll_speed*0.45)
 		else:
-			%sustain.scale.y = (data.length / Conductor.instance.get_step_crotchet(data.time))
+			%sustain.scale.y = (data.length + Conductor.instance.get_step_crotchet(data.time)) / Conductor.instance.get_step_crotchet(data.time)
 		%tail.position.y = %sustain.position.y + (87 * %sustain.scale.y)
 	else:
 		%sustain.visible = false
