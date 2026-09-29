@@ -86,6 +86,43 @@ func _process(delta: float) -> void:
 		paste()
 	elif Input.is_action_just_pressed("ui_text_select_all"):
 		select_all()
+	elif Input.is_action_just_pressed("editor_add_length"):
+		if !selected_notes.is_empty():
+			undo_redo.create_action("Add Note(s) Length")
+			var added_lengths:Dictionary[Note, float] = {}
+			undo_redo.add_do_method(func():
+				for note in selected_notes:
+					var add_length:float = conductor.get_step_crotchet(note.data.time)
+					note.data.length += add_length
+					added_lengths.set(note, add_length)
+			)
+			
+			undo_redo.add_undo_method(func():
+				for note in added_lengths.keys():
+					note.data.length -= added_lengths.get(note)
+			)
+			
+			undo_redo.commit_action()
+	elif Input.is_action_just_pressed("editor_decrease_length"):
+		if !selected_notes.is_empty():
+			undo_redo.create_action("Decrease Note(s) Length")
+			var decrease_lengths:Dictionary[Note, float] = {}
+			undo_redo.add_do_method(func():
+				for note in selected_notes:
+					var dec_length:float = conductor.get_step_crotchet(note.data.time)
+					note.data.length -= dec_length
+					if note.data.length < 0.01:
+						note.data.length = 0
+						dec_length = 0
+					decrease_lengths.set(note, dec_length)
+			)
+			
+			undo_redo.add_undo_method(func():
+				for note in decrease_lengths.keys():
+					note.data.length += decrease_lengths.get(note)
+			)
+			
+			undo_redo.commit_action()
 	elif Input.is_action_just_pressed("editor_save"):
 		if Input.is_action_pressed("editor_shift"):
 			save_as()

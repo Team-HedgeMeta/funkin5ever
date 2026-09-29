@@ -14,6 +14,8 @@ func _ready() -> void:
 	DiscordRPC.start_timestamp = int(Time.get_unix_time_from_system())
 	DiscordRPC.refresh()
 	
+	if !Song.current.in_cutscene: %items.find_child("skip_cutscene").free()
+	
 	change_item(0, false)
 	
 func change_item(change:int = 0, lerp:bool = true) -> void:

@@ -30,6 +30,12 @@ theme_override_fonts/font = ExtResource("2_g5tjf")
 theme_override_font_sizes/font_size = 86
 text = "RESUME"
 
+[node name="skip_cutscene" type="Label" parent="items" unique_id=1757559150]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_g5tjf")
+theme_override_font_sizes/font_size = 86
+text = "SKIP CUTSCENE"
+
 [node name="restart" type="Label" parent="items" unique_id=580119275]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_g5tjf")
