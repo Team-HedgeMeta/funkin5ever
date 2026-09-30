@@ -99,9 +99,8 @@ func _ready() -> void:
 	if is_instance_valid(world_projector) && is_instance_valid(world_projector.world):
 		if is_instance_valid(world_projector.world.animation_player) && !is_instance_valid(animation_player):
 			animation_player = world_projector.world.animation_player
-		if is_instance_valid(world_projector.world.extra_data):
-			for key in world_projector.world.extra_data.keys():
-				self.extra_data.set(key, world_projector.world.extra_data.get(key))
+		for key in world_projector.world.extra_data.keys():
+			self.extra_data.set(key, world_projector.world.extra_data.get(key))
 	
 	animation_player.animation_finished.connect(func(n):
 		if in_chart_editor: return
