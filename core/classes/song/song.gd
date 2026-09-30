@@ -24,7 +24,8 @@ static var played_end_cutscene:bool = false
 @export var world_projector:WorldProjector
 
 @export var skip_countdown:bool = false
-@export var camera_bop_interval:int = 4
+
+var camera_bop_interval:int = 4
 
 @export_category("Theme")
 @export var hud_scene:PackedScene = preload("res://core/gameplay/hud/default.tscn")
@@ -94,8 +95,12 @@ func _ready() -> void:
 	
 	stats = GameStats.new()
 	
-	if is_instance_valid(world_projector) && is_instance_valid(world_projector.world.animation_player) && !is_instance_valid(animation_player):
-		animation_player = world_projector.world.animation_player
+	if is_instance_valid(world_projector) && is_instance_valid(world_projector.world):
+		if is_instance_valid(world_projector.world.animation_player) && !is_instance_valid(animation_player):
+			animation_player = world_projector.world.animation_player
+		if is_instance_valid(world_projector.world.extra_data):
+			for key in world_projector.world.extra_data.keys():
+				self.extra_data.set(key, world_projector.world.extra_data.get(key))
 	
 	animation_player.animation_finished.connect(func(n):
 		if in_chart_editor: return
@@ -274,6 +279,7 @@ func _process(delta: float) -> void:
 var zoom_tween:Tween
 func _on_beat_hit(beat:int) -> void:
 	if in_chart_editor: return
+	if camera_bop_interval == 0: return
 	if beat % camera_bop_interval == 0:
 		if is_instance_valid(zoom_tween):
 			zoom_tween.kill()
