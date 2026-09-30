@@ -81,7 +81,8 @@ func _ready() -> void:
 	# fix when trying to run from editor directly
 	if playlist.size() < 1:
 		playlist.push_back(load(self.scene_file_path.replace("song.tscn", "meta.tres")))
-	
+		difficulty = meta.difficulties[meta.difficulties.size() - 1]
+
 	if GlobalSound.music_player.playing:
 		GlobalSound.music_player.stop()
 	
