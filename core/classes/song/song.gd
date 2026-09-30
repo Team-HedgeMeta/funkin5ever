@@ -26,6 +26,7 @@ static var played_end_cutscene:bool = false
 @export var skip_countdown:bool = false
 
 var camera_bop_interval:int = 4
+var camera_bop_scale:float = 0.02
 
 @export_category("Theme")
 @export var hud_scene:PackedScene = preload("res://core/gameplay/hud/default.tscn")
@@ -284,7 +285,7 @@ func _on_beat_hit(beat:int) -> void:
 		if is_instance_valid(zoom_tween):
 			zoom_tween.kill()
 		if is_instance_valid(hud):
-			hud.scale += Vector2(0.02, 0.02)
+			hud.scale += Vector2(camera_bop_scale, camera_bop_scale)
 			zoom_tween = get_tree().create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 			zoom_tween.tween_property(hud, "scale", Vector2.ONE, conductor.get_crotchet() * 4)
 
