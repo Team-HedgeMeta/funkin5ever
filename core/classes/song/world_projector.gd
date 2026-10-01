@@ -21,6 +21,7 @@ func _ready() -> void:
 func setup() -> void:
 	var window_size:Vector2 = Vector2(float(ProjectSettings.get_setting("display/window/size/viewport_width")), float(ProjectSettings.get_setting("display/window/size/viewport_height")))
 	self.size = window_size
+	self.pivot_offset = window_size / 2
 	self.set_anchors_preset(Control.PRESET_FULL_RECT)
 	if sub_viewport == null:
 		sub_viewport = SubViewport.new()
